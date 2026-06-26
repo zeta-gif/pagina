@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quinto Grado - Herramientas</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Quicksand:wght@500;700&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Quicksand', sans-serif;
+      
+      /* --- FONDO MÁGICO EN MOVIMIENTO SUAVE --- */
+      background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 30%, #feebb4 60%, #a1c4fd 100%);
+      background-image: 
+        radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.6) 0%, transparent 15%),
+        radial-gradient(circle at 75% 15%, rgba(255, 255, 255, 0.4) 0%, transparent 20%),
+        radial-gradient(circle at 40% 80%, rgba(255, 255, 255, 0.5) 0%, transparent 12%),
+        radial-gradient(circle at 85% 75%, rgba(255, 255, 255, 0.6) 0%, transparent 18%),
+        radial-gradient(white 1px, transparent 2px),
+        radial-gradient(white 2px, transparent 3px);
+      
+      background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 90px 90px, 150px 150px;
+      background-position: 0 0, 0 0, 0 0, 0 0, 0 0, 40px 40px;
+      background-attachment: fixed;
+      animation: magiaAurora 22s ease-in-out infinite alternate;
+      
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 60px 20px 180px 20px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    @keyframes magiaAurora {
+      0% { filter: hue-rotate(0deg) saturate(1); }
+      100% { filter: hue-rotate(20deg) saturate(1.1); }
+    }
+
+    body::before {
+      content: ""; position: fixed; bottom: 0; left: -10%; width: 120%; height: 200px;
+      background: #81c784; border-radius: 100% 100% 0 0; z-index: 0;
+      box-shadow: inset 0 30px 0 #66bb6a, 0 -10px 30px rgba(0,0,0,0.05);
+    }
+
+    .colina-extra {
+      position: fixed; bottom: -50px; right: -20%; width: 100%; height: 250px;
+      background: #4caf50; border-radius: 100% 100% 0 0; z-index: 0; opacity: 0.8;
+    }
+
+    /* Encabezado Especial Temático (Azul para 5°) */
+    .header-grado {
+      text-align: center;
+      z-index: 2;
+      margin-bottom: 40px;
+    }
+
+    .header-grado h2 { 
+      font-family: 'Fredoka', sans-serif; 
+      font-size: clamp(2.5rem, 7vw, 3.8rem); 
+      color: #fff; 
+      text-shadow: -3px -3px 0 #0d47a1, 3px -3px 0 #0d47a1, -3px 4px 0 #0d47a1, 3px 4px 0 #0d47a1,
+                   0px 8px 0px #64b5f6, 0px 12px 20px rgba(0,0,0,0.25);
+      animation: flotarTitulo 4s ease-in-out infinite;
+      margin-bottom: 10px;
+    }
+
+    @keyframes flotarTitulo {
+      0%, 100% { transform: translateY(0) rotate(-0.5deg); }
+      50% { transform: translateY(-8px) rotate(0.5deg); }
+    }
+
+    .header-grado p {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #0d47a1;
+      text-shadow: 1px 1px 0px rgba(255,255,255,0.8);
+    }
+
+    .container { max-width: 800px; width: 100%; z-index: 2; }
+
+    /* --- BLOQUES DE CATEGORÍAS --- */
+    .categoria-card {
+      background: rgba(255, 255, 255, 0.96);
+      border: 6px solid #fff;
+      border-radius: 35px;
+      padding: 30px;
+      margin-bottom: 35px;
+      box-shadow: 0 12px 0px rgba(30, 144, 255, 0.3), 0 15px 25px rgba(0,0,0,0.1);
+    }
+
+    .categoria-titulo {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.6rem;
+      color: #0d47a1;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      border-bottom: 3px dashed #64b5f6;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+    }
+
+    .grid-recursos {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 15px;
+    }
+
+    /* --- BOTONES DE ENLACES INDIVIDUALES --- */
+    .btn-recurso {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 20px;
+      background: #fff;
+      text-decoration: none;
+      border-radius: 20px;
+      font-family: 'Fredoka', sans-serif;
+      font-weight: 600;
+      font-size: 1.1rem;
+      transition: all 0.2s ease;
+      border: 3px solid #1e90ff;
+      box-shadow: 0 5px 0 #0076e4;
+      color: #0d47a1;
+    }
+
+    .btn-recurso:hover { 
+      transform: translateY(-4px); 
+      background: #e3f2fd;
+      filter: brightness(1.02);
+    }
+
+    .btn-recurso:active { 
+      transform: translateY(4px); 
+      box-shadow: none !important; 
+    }
+
+    .emoji-recurso { font-size: 1.4rem; }
+
+    /* Botón Volver */
+    .back-nav { 
+      margin-top: 20px; color: white; font-family: 'Fredoka', sans-serif; font-weight: 700; 
+      text-decoration: none; font-size: 1.3rem; text-transform: uppercase;
+      background: linear-gradient(180deg, #ffb300, #ff6f00); padding: 16px 40px;
+      border-radius: 35px; border: 3px solid #fff; box-shadow: 0 8px 0 #e65100, 0 10px 20px rgba(0,0,0,0.25);
+      transition: all 0.1s ease; z-index: 2;
+    }
+    .back-nav:hover { filter: brightness(1.1); transform: scale(1.02); }
+    .back-nav:active { transform: translateY(6px); box-shadow: 0 2px 0 rgba(0,0,0,0.2) !important; }
+
+    /* Elementos animados */
+    .elemento-jardin {
+      position: absolute; z-index: 1; font-size: 2.5rem; user-select: none; pointer-events: none;
+      animation: caerYGirar 11s linear infinite;
+    }
+    @keyframes caerYGirar {
+      0% { transform: translateY(-50px) rotate(0deg); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+    }
+
+    @media (max-width: 550px) {
+      .grid-recursos { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="colina-extra"></div>
+
+  <div class="elemento-jardin" style="left: 4%; animation-duration: 9s; animation-delay: 1s;">📘</div>
+  <div class="elemento-jardin" style="left: 22%; animation-duration: 13s; animation-delay: 0s;">🍃</div>
+  <div class="elemento-jardin" style="left: 78%; animation-duration: 11s; animation-delay: 2s;">🌻</div>
+  <div class="elemento-jardin" style="left: 92%; animation-duration: 15s; animation-delay: 3s;">🚀</div>
+
+  <header class="header-grado">
+    <h2>📘Campos formativos</h2>
+    <p>¡Explora los desafíos digitales por campos formativos!</p>
+  </header>
+
+  <main class="container">
+    
+    <!-- CAMPO 1: LENGUAJES -->
+    <div class="categoria-card">
+      <div class="categoria-titulo">🗣️ Campo: Lenguajes</div>
+      <div class="grid-recursos">
+        <a href="https://es.educaplay.com/" target="_blank" rel="noopener noreferrer" class="btn-recurso"><span class="emoji-recurso">🔍</span> Sopa de Letras: Sinónimos</a>
+        <a href="https://es.educaplay.com/" target="_blank" rel="noopener noreferrer" class="btn-recurso"><span class="emoji-recurso">📝</span> Crucigrama: Sustantivos y Adjetivos</a>
+        <a href="https://wordwall.net/es" target="_blank" rel="noopener noreferrer" class="btn-recurso"><span class="emoji-recurso">🎡</span> Ruleta de Categorías Gramaticales</a>
+        <a href="https://wordwall.net/es" target="_blank" rel="noopener noreferrer" class="btn-recurso"><span class="emoji-recurso">🎴</span> Memorama: Tipos de Texto</a>
+        <a href="https://es.liveworksheets.com/" target="_blank" rel="noopener noreferrer" class="btn-recurso"><span class="emoji-recurso">⏳</span> Secuencias Narrativas</a>
+        <a href="https://quizizz.com/" target="_blank" rel="noopener noreferrer" class="btn-recurso"><span class="emoji-recurso">🤓</span> Quiz de Comprensión Lectora</a>
+        <a href="https://kahoot.com/" target="_blank" rel="noopener noreferrer" class="btn-recurso"><span class="emoji-recurso">💡</span> Adivina el Significado</a>
+        <a href="https://genially.com/" target="_blank" rel="noopener noreferrer" class="btn-recurso"><span class="emoji-recurso">🗝️</span> Escape Room de Lectura</a>
+      </div>
+    </div>
+
+    <!-- CAMPO 2: SABERES Y PENSAMIENTO CIENTÍFICO -->
+    <div class="categoria-card">
+      <div class="categoria-titulo">🔬 Campo: Saberes y P. Científico</div>
+      <div class="grid-recursos">
+        <a href="https://wordwall.net/es" target="_blank" rel="noopener noreferrer" class="btn-recurso"><span class="emoji-recurso">⏱️</span> Matemáticas Contra Reloj</a>
+        <a href="https://kahoot.com/" target="_blank" rel="noopener noreferrer" class="btn-recurso"><span class="emoji-recurso">✖️</span> Carrera de Multiplicaciones</a>
+        <a href="https://es.educaplay.com/" target="_blank" rel="noopener noreferrer" class="btn-recurso"><span class="emoji-recurso">🪐</span> Memorama del Sistema Solar</a>
+        <a href="https://quizizz.com/" target="_blank" rel="noopener noreferrer" class="btn-recurso"><span class="emoji-recurso">🧪</span> Quiz: Estados de la Materia</a>
+        <a href="https://es.educaplay.com/" target="_blank" rel="noopener noreferrer" class="btn-recurso"><span class="emoji-recurso">🌲</span> Sopa de Letras: Ecosistemas</a>
+        <a href="https://wordwall.net/es" target="_blank" rel="noopener noreferrer" class="btn-recurso"><span class="emoji-recurso">🍕</span> Ruleta de Fracciones</a>
+        <a href="https://es.liveworksheets.com/" target="_blank" rel="noopener noreferrer" class="btn-recurso"><span class="emoji-recurso">🐾</span> Vertebrados e Invertebrados</a>
+        <a href="https://phet.colorado.edu/es/" target="_blank" rel="noopener noreferrer" class="btn-recurso"><span class="emoji-recurso">🥽</span> Laboratorio Virtual PhET</a>
+      </div>
+    </div>
+
+    <!-- CAMPO 3: ÉTICA, NATURALEZA Y SOCIEDADES -->
+    <div class="categoria-card">
+      <div class="categoria-titulo">🌎 Campo: Ética, Naturaleza y Sociedades</div>
+      <div class="grid-recursos">
+        <a href="https://es.educaplay.com/recursos-educativos/22518022-reactivos_de_etica_naturaleza_y_sociedades_para_quinto_grado.html" target="_blank" rel="noopener noreferrer" class="btn-recurso"><span class="emoji-recurso">🐸</span> Froggy Jumps (Quinto Grado)</a>
+        <a href="https://www.educaplay.com/learning-resources/21053645-repaso_de_etica_naturaleza_y_sociedades.html" target="_blank" rel="noopener noreferrer" class="btn-recurso"><span class="emoji-recurso">📚</span> Repaso General del Campo</a>
+        <a href="https://wordwall.net/es" target="_blank" rel="noopener noreferrer" class="btn-recurso"><span class="emoji-recurso">🦅</span> Personajes Históricos de México</a>
+        <a href="https://quizizz.com/" target="_blank" rel="noopener noreferrer" class="btn-recurso"><span class="emoji-recurso">🇲🇽</span> Quiz: Símbolos Patrios</a>
+        <a href="https://es.educaplay.com/" target="_blank" rel="noopener noreferrer" class="btn-recurso"><span class="emoji-recurso">⚖️</span> Derechos de Niñas y Niños</a>
+        <a href="https://wordwall.net/es" target="_blank" rel="noopener noreferrer" class="btn-recurso"><span class="emoji-recurso">🤝</span> Ruleta de Valores y Convivencia</a>
+        <a href="https://online.seterra.com/es" target="_blank" rel="noopener noreferrer" class="btn-recurso"><span class="emoji-recurso">🗺️</span> Juego de Geografía de México</a>
+      </div>
+    </div>
+
+    <!-- CAMPO 4: DE LO HUMANO Y LO COMUNITARIO -->
+    <div class="categoria-card">
+      <div class="categoria-titulo">❤️ Campo: De lo Humano y lo Comunitario</div>
+      <div class="grid-recursos">
+        <a href="https://view.genially.com/647036f2c7e5fa00180c8b2f/interactive-content-juego-del-campo-formativo-de-lo-humano-y-lo-comunitario" target="_blank" rel="noopener noreferrer" class="btn-recurso"><span class="emoji-recurso">🎮</span> Juego Interactivo Completo</a>
+        <a href="https://wordwall.net/es" target="_blank" rel="noopener noreferrer" class="btn-recurso"><span class="emoji-recurso">🎭</span> Bingo de Emociones</a>
+        <a href="https://es.educaplay.com" target="_blank" rel="noopener noreferrer" class="btn-recurso"><span class="emoji-recurso">🧠</span> Habilidades Socioemocionales</a>
+        <a href="https://wordwall.net/es" target="_blank" rel="noopener noreferrer" class="btn-recurso"><span class="emoji-recurso">💬</span> Resolución de Conflictos</a>
+        <a href="https://quizizz.com" target="_blank" rel="noopener noreferrer" class="btn-recurso"><span class="emoji-recurso">👥</span> Quiz: Trabajo en Equipo</a>
+        <a href="https://genially.com" target="_blank" rel="noopener noreferrer" class="btn-recurso"><span class="emoji-recurso">🏫</span> Escape Room Convivencia</a>
+        <a href="https://es.educaplay.com" target="_blank" rel="noopener noreferrer" class="btn-recurso"><span class="emoji-recurso">🎯</span> Decisiones Responsables</a>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Regresa al menú general de los grados -->
+  <a href="a3.html" class="back-nav">« Volver al Menú de Grados</a>
+
+</body>
+</html>

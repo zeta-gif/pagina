@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jardín Literario Digital</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&display=swap');
+
+    body {
+      background: linear-gradient(180deg, 
+        #ff9a9e 0%, 
+        #fecfef 25%, 
+        #feebb4 55%, 
+        #a1c4fd 85%, 
+        #c2e9fb 100%
+      );
+      font-family: 'Fredoka', sans-serif;
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 60px 20px 150px 20px;
+      box-sizing: border-box;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      bottom: 0;
+      left: -10%;
+      width: 120%;
+      height: 200px;
+      background: #81c784;
+      border-radius: 100% 100% 0 0;
+      z-index: 0;
+      box-shadow: inset 0 30px 0 #66bb6a, 0 -10px 30px rgba(0,0,0,0.05);
+    }
+
+    .colina-extra {
+      position: fixed;
+      bottom: -50px;
+      right: -20%;
+      width: 100%;
+      height: 250px;
+      background: #4caf50;
+      border-radius: 100% 100% 0 0;
+      z-index: 0;
+      opacity: 0.8;
+    }
+
+    h1 {
+      font-size: clamp(2.5rem, 7vw, 4.2rem);
+      color: #fff;
+      text-align: center;
+      margin-bottom: 60px;
+      font-weight: 700;
+      z-index: 2;
+      text-shadow: 
+        -4px -4px 0 #283593,  4px -4px 0 #283593,
+        -4px  4px 0 #283593,  4px  4px 0 #283593,
+        0px 8px 0px #ffeb3b,
+        0px 15px 25px rgba(0,0,0,0.25);
+      animation: flotarTitulo 4s ease-in-out infinite;
+    }
+
+    @keyframes flotarTitulo {
+      0%, 100% { transform: translateY(0) rotate(-1deg); }
+      50% { transform: translateY(-12px) rotate(1deg); }
+    }
+
+    .garden-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 50px;
+      max-width: 1000px;
+      width: 100%;
+      z-index: 2; 
+    }
+
+    .bubble {
+      width: 100%;
+      max-width: 340px; 
+      min-height: 380px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 50px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      text-align: center;
+      padding: 45px 30px;
+      box-sizing: border-box;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .bubble:nth-child(1) { 
+      border: 8px solid #00e5ff; 
+      box-shadow: 0 14px 0px #00b8d4, 0 25px 30px rgba(0,0,0,0.15);
+    }
+    
+    .bubble:nth-child(2) { 
+      border: 8px solid #ff4081; 
+      box-shadow: 0 14px 0px #c2185b, 0 25px 30px rgba(0,0,0,0.15);
+    }
+
+    .bubble:hover { transform: translateY(-18px) scale(1.04); }
+
+    .bubble h3 { 
+      font-size: 2.2rem; 
+      margin: 0;
+      color: #3f51b5;
+      text-shadow: 3px 3px 0px #e8eaf6;
+    }
+    
+    .bubble p { 
+      font-size: 1.25rem; 
+      color: #455a64; 
+      line-height: 1.5; 
+      margin: 15px 0;
+      font-weight: 700;
+    }
+
+    .btn-action {
+      padding: 16px 45px;
+      color: white;
+      text-decoration: none;
+      border-radius: 30px;
+      font-size: 1.4rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      display: inline-block;
+      transition: all 0.1s ease;
+      border: 3px solid #fff;
+    }
+
+    .bubble:nth-child(1) .btn-action {
+      background: linear-gradient(180deg, #ffb300, #ff6f00);
+      box-shadow: 0 8px 0 #e65100, 0 10px 20px rgba(0,0,0,0.2);
+    }
+
+    .bubble:nth-child(2) .btn-action {
+      background: linear-gradient(180deg, #00b0ff, #2979ff);
+      box-shadow: 0 8px 0 #0d47a1, 0 10px 20px rgba(0,0,0,0.2);
+    }
+	 .bubble:nth-child(3) .btn-action {
+      background: linear-gradient(180deg, #00b0ff, #2979ff);
+      box-shadow: 0 8px 0 #0d47a1, 0 10px 20px rgba(0,0,0,0.2);
+    }
+
+
+    .btn-action:active {
+      transform: translateY(6px);
+      box-shadow: 0 2px 0 rgba(0,0,0,0.2) !important;
+    }
+
+    /* ========================================================
+       ESQUINAS INTERACTIVAS (DINO ABECEDARIO Y DRAGÓN TABLAS)
+       ======================================================== */
+    
+    .esquina-escolar {
+      position: fixed;
+      bottom: 20px;
+      z-index: 100;
+    }
+    .esquina-izq { left: 20px; }
+    .esquina-der { right: 20px; }
+
+    .btn-flotante {
+      width: 75px;
+      height: 75px;
+      border-radius: 50%;
+      border: 4px solid #fff;
+      font-size: 2.3rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+      animation: huevoFlotando 3s ease-in-out infinite;
+    }
+    .esquina-izq .btn-flotante { background: linear-gradient(135deg, #a8ff78, #78ffd6); }
+    .esquina-der .btn-flotante { background: linear-gradient(135deg, #ff9966, #ff5e62); }
+
+    @keyframes huevoFlotando {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-8px) scale(1.05); }
+    }
+
+    .popover-educativo {
+      position: absolute;
+      bottom: 90px;
+      background: #ffffff;
+      border-radius: 35px;
+      padding: 20px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+      display: none;
+      width: 340px;
+      box-sizing: border-box;
+      animation: nacerCriatura 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    
+    .esquina-izq .popover-educativo { left: 0; border: 6px solid #4caf50; }
+    .esquina-der .popover-educativo { right: 0; border: 6px solid #ff5722; }
+
+    @keyframes nacerCriatura {
+      from { opacity: 0; transform: translateY(50px) scale(0.5); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .avatar-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #f5f6fa;
+      padding: 12px;
+      border-radius: 25px;
+      margin-bottom: 15px;
+    }
+    .avatar-emoji { font-size: 2.5rem; animation: brincarAvatar 2s ease-in-out infinite; }
+    .avatar-texto h4 { margin: 0; color: #2c3e50; font-size: 1.2rem; }
+    .avatar-texto p { margin: 2px 0 0 0; color: #7f8c8d; font-size: 0.9rem; font-weight: bold; }
+
+    @keyframes brincarAvatar {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    /* --- EL ABECEDARIO PURO DEL DINOSAURIO --- */
+    .abc-grid-puro {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 7px;
+    }
+    .letra-boton {
+      background: #fff;
+      border: 2px solid #c8e6c9;
+      border-radius: 12px;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: #2e7d32;
+      font-size: 1.2rem;
+      cursor: pointer;
+      box-shadow: 0 3px 0 #c8e6c9;
+      user-select: none;
+      transition: background 0.2s;
+    }
+    .letra-boton:hover { background: #e8f5e9; }
+    
+    /* Animación divertida al tocar las letras */
+    .letra-animada {
+      animation: reboteLetra 0.3s ease-out;
+      background: #c8e6c9 !important;
+      color: #1b5e20 !important;
+    }
+    @keyframes reboteLetra {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.3); }
+      100% { transform: scale(1); }
+    }
+
+    /* --- TABLAS DRAGÓN --- */
+    .tablas-contenedor { display: flex; flex-direction: column; gap: 10px; }
+    .selector-tablas { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
+    .btn-numero-tabla {
+      background: white; border: 2px solid #ffcc80; border-radius: 8px;
+      padding: 6px; font-weight: bold; color: #e65100; cursor: pointer; font-size: 1rem;
+    }
+    .btn-numero-tabla:hover { background: #fff3e0; }
+    .pizarra-fuego {
+      background: #fff5f5; border: 3px dashed #ff5722; border-radius: 15px;
+      padding: 10px; font-size: 0.9rem; display: grid; grid-template-columns: repeat(2, 1fr);
+      gap: 4px; font-weight: bold; color: #c62828;
+    }
+    .linea-multiplicar { background: white; padding: 3px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); text-align: center;}
+    .llamarada-anim { animation: fuegoEfecto 0.4s ease-in-out; }
+    @keyframes fuegoEfecto {
+      0% { transform: scale(0.96); background: #ffe0b2; }
+      100% { transform: scale(1); }
+    }
+
+    .elemento-jardin {
+      position: absolute; z-index: 1; font-size: 2.5rem; user-select: none; pointer-events: none;
+      animation: caerYGirar 8s linear infinite;
+    }
+    @keyframes caerYGirar {
+      0% { transform: translateY(-50px) rotate(0deg); opacity: 0; }
+      10% { opacity: 1; }
+      100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+    }
+
+    @media (max-width: 480px) {
+      body { padding-bottom: 120px; }
+      .popover-educativo { width: 300px; position: fixed; bottom: 110px; left: 10px; right: 10px; margin: auto; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="colina-extra"></div>
+
+  <div class="elemento-jardin" style="left: 5%; animation-duration: 9s;">🌸</div>
+  <div class="elemento-jardin" style="left: 25%; animation-duration: 12s;">🍃</div>
+  <div class="elemento-jardin" style="left: 75%; animation-duration: 10s;">🌻</div>
+  <div class="elemento-jardin" style="left: 90%; animation-duration: 14s;">🍁</div>
+
+  <h1>🌟 Jardín Literario Digital 🌟</h1>
+
+  <main class="garden-container">
+    <div class="bubble">
+      <h3>✍️ ¡A escribir!</h3>
+      <p>Vamos a conocernos y a compartir nuestras grandes metas.</p>
+      <a href="a1.html" class="btn-action">¡Entrar!</a>
+    </div>
+
+    <div class="bubble">
+      <h3>📚 ¡A explorar!</h3>
+      <p>Descubre aplicaciones divertidas para aprender jugando.</p>
+      <a href="a2.html" class="btn-action">¡Vamos!</a>
+    </div>
+	
+	
+	  <div class="bubble">
+      <h3>Herramientas 1° a 6°</h3>
+      <p>Descubre más de 100 herramientas!!!.</p>
+      <a href="a3.html" class="btn-action">Ingresar</a>
+    </div>
+	
+	
+  </main>
+
+
+  <!-- ========================================================
+       ESQUINA IZQUIERDA: EL ABECEDARIO INTERACTIVO DEL DINO
+       ======================================================== -->
+  <div class="esquina-escolar esquina-izq">
+    <div class="popover-educativo" id="popover-abc">
+      
+      <div class="avatar-header">
+        <div class="avatar-emoji">🦖</div>
+        <div class="avatar-texto">
+          <h4>Abecedario Mágico</h4>
+          <p>¡Estas son todas las letras del ABECEDARIO!</p>
+        </div>
+      </div>
+
+      <!-- Cuadrícula limpia y pura del Abecedario -->
+      <div class="abc-grid-puro">
+        <button class="letra-boton" onclick="animarLetra(this)">A</button>
+        <button class="letra-boton" onclick="animarLetra(this)">B</button>
+        <button class="letra-boton" onclick="animarLetra(this)">C</button>
+        <button class="letra-boton" onclick="animarLetra(this)">D</button>
+        <button class="letra-boton" onclick="animarLetra(this)">E</button>
+        <button class="letra-boton" onclick="animarLetra(this)">F</button>
+        <button class="letra-boton" onclick="animarLetra(this)">G</button>
+        <button class="letra-boton" onclick="animarLetra(this)">H</button>
+        <button class="letra-boton" onclick="animarLetra(this)">I</button>
+        <button class="letra-boton" onclick="animarLetra(this)">J</button>
+        <button class="letra-boton" onclick="animarLetra(this)">K</button>
+        <button class="letra-boton" onclick="animarLetra(this)">L</button>
+        <button class="letra-boton" onclick="animarLetra(this)">M</button>
+        <button class="letra-boton" onclick="animarLetra(this)">N</button>
+        <button class="letra-boton" onclick="animarLetra(this)">Ñ</button>
+        <button class="letra-boton" onclick="animarLetra(this)">O</button>
+        <button class="letra-boton" onclick="animarLetra(this)">P</button>
+        <button class="letra-boton" onclick="animarLetra(this)">Q</button>
+        <button class="letra-boton" onclick="animarLetra(this)">R</button>
+        <button class="letra-boton" onclick="animarLetra(this)">S</button>
+        <button class="letra-boton" onclick="animarLetra(this)">T</button>
+        <button class="letra-boton" onclick="animarLetra(this)">U</button>
+        <button class="letra-boton" onclick="animarLetra(this)">V</button>
+        <button class="letra-boton" onclick="animarLetra(this)">W</button>
+        <button class="letra-boton" onclick="animarLetra(this)">X</button>
+        <button class="letra-boton" onclick="animarLetra(this)">Y</button>
+        <button class="letra-boton" onclick="animarLetra(this)">Z</button>
+      </div>
+
+    </div>
+    <button class="btn-flotante" onclick="toggleCriatura('popover-abc')">🦖</button>
+  </div>
+
+
+  <!-- ========================================================
+       ESQUINA DERECHA: EL DRAGÓN DE LAS TABLAS
+       ======================================================== -->
+  <div class="esquina-escolar esquina-der">
+    <div class="popover-educativo" id="popover-tablas">
+      
+      <div class="avatar-header">
+        <div class="avatar-emoji">🐲</div>
+        <div class="avatar-texto">
+          <h4>Dragón Matemático</h4>
+          <p>¡Toca un número para ver su tabla!</p>
+        </div>
+      </div>
+
+      <div class="tablas-contenedor">
+        <div class="selector-tablas">
+          <button class="btn-numero-tabla" onclick="lanzarFuego(1)">1</button>
+          <button class="btn-numero-tabla" onclick="lanzarFuego(2)">2</button>
+          <button class="btn-numero-tabla" onclick="lanzarFuego(3)">3</button>
+          <button class="btn-numero-tabla" onclick="lanzarFuego(4)">4</button>
+          <button class="btn-numero-tabla" onclick="lanzarFuego(5)">5</button>
+          <button class="btn-numero-tabla" onclick="lanzarFuego(6)">6</button>
+          <button class="btn-numero-tabla" onclick="lanzarFuego(7)">7</button>
+          <button class="btn-numero-tabla" onclick="lanzarFuego(8)">8</button>
+          <button class="btn-numero-tabla" onclick="lanzarFuego(9)">9</button>
+          <button class="btn-numero-tabla" onclick="lanzarFuego(10)">10</button>
+        </div>
+        <div class="pizarra-fuego" id="pizarra-fuego"></div>
+      </div>
+
+    </div>
+    <button class="btn-flotante" onclick="toggleCriatura('popover-tablas')">🐲</button>
+  </div>
+
+
+  <!-- LÓGICA DE CONTROL -->
+  <script {nonce}>
+    function toggleCriatura(id) {
+      const ventana = document.getElementById(id);
+      const abierta = ventana.style.display === 'block';
+      document.getElementById('popover-abc').style.display = 'none';
+      document.getElementById('popover-tablas').style.display = 'none';
+      if (!abierta) ventana.style.display = 'block';
+    }
+
+    // --- EFECTO INTERACTIVO DEL DINOSAURIO ---
+    function animarLetra(boton) {
+      boton.classList.remove('letra-animada');
+      void boton.offsetWidth; // Reinicia la animación en el navegador
+      boton.classList.add('letra-animada');
+      
+      // Quita el color de resaltado al terminar el rebote (300ms)
+      setTimeout(() => {
+        boton.classList.remove('letra-animada');
+      }, 300);
+    }
+
+    // --- LAS TABLAS DEL DRAGÓN ---
+    function lanzarFuego(numero) {
+      const pizarra = document.getElementById('pizarra-fuego');
+      pizarra.innerHTML = '';
+      pizarra.classList.remove('llamarada-anim');
+      void pizarra.offsetWidth; 
+      pizarra.classList.add('llamarada-anim');
+
+      for (let i = 1; i <= 10; i++) {
+        pizarra.innerHTML += `<div class="linea-multiplicar">${numero} x ${i} = <span style="color:#ff5722;">${numero * i}</span> 🔥</div>`;
+      }
+    }
+    lanzarFuego(2);
+  </script>
+
+</body>
+</html>

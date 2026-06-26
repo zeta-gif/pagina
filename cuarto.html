@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cuarto Grado - Herramientas</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Quicksand:wght@500;700&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Quicksand', sans-serif;
+      
+      /* --- FONDO MÁGICO EN MOVIMIENTO SUAVE --- */
+      background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 30%, #feebb4 60%, #a1c4fd 100%);
+      background-image: 
+        radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.6) 0%, transparent 15%),
+        radial-gradient(circle at 75% 15%, rgba(255, 255, 255, 0.4) 0%, transparent 20%),
+        radial-gradient(circle at 40% 80%, rgba(255, 255, 255, 0.5) 0%, transparent 12%),
+        radial-gradient(circle at 85% 75%, rgba(255, 255, 255, 0.6) 0%, transparent 18%),
+        radial-gradient(white 1px, transparent 2px),
+        radial-gradient(white 2px, transparent 3px);
+      
+      background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 90px 90px, 150px 150px;
+      background-position: 0 0, 0 0, 0 0, 0 0, 0 0, 40px 40px;
+      background-attachment: fixed;
+      animation: magiaAurora 22s ease-in-out infinite alternate;
+      
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 60px 20px 180px 20px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    @keyframes magiaAurora {
+      0% { filter: hue-rotate(0deg) saturate(1); }
+      100% { filter: hue-rotate(20deg) saturate(1.1); }
+    }
+
+    body::before {
+      content: ""; position: fixed; bottom: 0; left: -10%; width: 120%; height: 200px;
+      background: #81c784; border-radius: 100% 100% 0 0; z-index: 0;
+      box-shadow: inset 0 30px 0 #66bb6a, 0 -10px 30px rgba(0,0,0,0.05);
+    }
+
+    .colina-extra {
+      position: fixed; bottom: -50px; right: -20%; width: 100%; height: 250px;
+      background: #4caf50; border-radius: 100% 100% 0 0; z-index: 0; opacity: 0.8;
+    }
+
+    /* Encabezado Especial Temático (Morado/Lila para 4°) */
+    .header-grado {
+      text-align: center;
+      z-index: 2;
+      margin-bottom: 40px;
+    }
+
+    .header-grado h2 { 
+      font-family: 'Fredoka', sans-serif; 
+      font-size: clamp(2.5rem, 7vw, 3.8rem); 
+      color: #fff; 
+      text-shadow: -3px -3px 0 #4a148c, 3px -3px 0 #4a148c, -3px 4px 0 #4a148c, 3px 4px 0 #4a148c,
+                   0px 8px 0px #aa00ff, 0px 12px 20px rgba(0,0,0,0.25);
+      animation: flotarTitulo 4s ease-in-out infinite;
+      margin-bottom: 10px;
+    }
+
+    @keyframes flotarTitulo {
+      0%, 100% { transform: translateY(0) rotate(-0.5deg); }
+      50% { transform: translateY(-8px) rotate(0.5deg); }
+    }
+
+    .header-grado p {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #4a148c;
+      text-shadow: 1px 1px 0px rgba(255,255,255,0.8);
+    }
+
+    .container { max-width: 800px; width: 100%; z-index: 2; }
+
+    /* --- BLOQUES DE CATEGORÍAS --- */
+    .categoria-card {
+      background: rgba(255, 255, 255, 0.96);
+      border: 6px solid #fff;
+      border-radius: 35px;
+      padding: 30px;
+      margin-bottom: 35px;
+      box-shadow: 0 12px 0px rgba(155, 93, 229, 0.3), 0 15px 25px rgba(0,0,0,0.1);
+    }
+
+    .categoria-titulo {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.6rem;
+      color: #4a148c;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      border-bottom: 3px dashed #d1c4e9;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+    }
+
+    .grid-recursos {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 15px;
+    }
+
+    /* --- BOTONES DE ENLACES INDIVIDUALES --- */
+    .btn-recurso {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 20px;
+      background: #fff;
+      text-decoration: none;
+      border-radius: 20px;
+      font-family: 'Fredoka', sans-serif;
+      font-weight: 600;
+      font-size: 1.1rem;
+      transition: all 0.2s ease;
+      border: 3px solid #9b5de5;
+      box-shadow: 0 5px 0 #7b2cbf;
+      color: #4a148c;
+    }
+
+    .btn-recurso:hover { 
+      transform: translateY(-4px); 
+      background: #f3e5f5;
+      filter: brightness(1.02);
+    }
+
+    .btn-recurso:active { 
+      transform: translateY(4px); 
+      box-shadow: none !important; 
+    }
+
+    .emoji-recurso { font-size: 1.4rem; }
+
+    /* Botón Volver */
+    .back-nav { 
+      margin-top: 20px; color: white; font-family: 'Fredoka', sans-serif; font-weight: 700; 
+      text-decoration: none; font-size: 1.3rem; text-transform: uppercase;
+      background: linear-gradient(180deg, #ffb300, #ff6f00); padding: 16px 40px;
+      border-radius: 35px; border: 3px solid #fff; box-shadow: 0 8px 0 #e65100, 0 10px 20px rgba(0,0,0,0.25);
+      transition: all 0.1s ease; z-index: 2;
+    }
+    .back-nav:hover { filter: brightness(1.1); transform: scale(1.02); }
+    .back-nav:active { transform: translateY(6px); box-shadow: 0 2px 0 rgba(0,0,0,0.2) !important; }
+
+    /* Flores decorativas */
+    .elemento-jardin {
+      position: absolute; z-index: 1; font-size: 2.5rem; user-select: none; pointer-events: none;
+      animation: caerYGirar 11s linear infinite;
+    }
+    @keyframes caerYGirar {
+      0% { transform: translateY(-50px) rotate(0deg); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+    }
+
+    @media (max-width: 550px) {
+      .grid-recursos { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="colina-extra"></div>
+
+  <div class="elemento-jardin" style="left: 4%; animation-duration: 9s; animation-delay: 1s;">🌈</div>
+  <div class="elemento-jardin" style="left: 22%; animation-duration: 13s; animation-delay: 0s;">🍃</div>
+  <div class="elemento-jardin" style="left: 78%; animation-duration: 11s; animation-delay: 2s;">✨</div>
+  <div class="elemento-jardin" style="left: 92%; animation-duration: 15s; animation-delay: 3s;">🎈</div>
+
+  <header class="header-grado">
+    <h2>🌈 CUARTO GRADO</h2>
+    <p>¡Desafíos interactivos de aprendizaje y diversión!</p>
+  </header>
+
+  <main class="container">
+    
+    <div class="categoria-card">
+      <div class="categoria-titulo">🧮 Desafíos Matemáticos</div>
+      <div class="grid-recursos">
+        <a href="https://www.cokitos.com/desafio-matematico-sistema-de-ecuaciones/play/" target="_blank" rel="noopener noreferrer" class="btn-recurso"><span class="emoji-recurso">⚖️</span> Sistema de Ecuaciones</a>
+        <a href="https://www.cokitos.com/carrera-de-multiplicaciones-en-moto/" target="_blank" rel="noopener noreferrer" class="btn-recurso"><span class="emoji-recurso">🏍️</span> Carreras en Moto Mult.</a>
+        <a href="https://www.cokitos.com/multiplicaciones-ninja-slash/" target="_blank" rel="noopener noreferrer" class="btn-recurso"><span class="emoji-recurso">🥷</span> Multiplicaciones Ninja</a>
+        <a href="https://www.cokitos.com/juego-de-los-numeros-romanos/" target="_blank" rel="noopener noreferrer" class="btn-recurso"><span class="emoji-recurso">🏛️</span> Números Romanos</a>
+      </div>
+    </div>
+
+    <div class="categoria-card">
+      <div class="categoria-titulo">🗣️ Idiomas y Palabras</div>
+      <div class="grid-recursos">
+        <a href="https://www.cokitos.com/adjetivos-comparativos-y-superlativos-en-ingles/" target="_blank" rel="noopener noreferrer" class="btn-recurso"><span class="emoji-recurso">🇬🇧</span> Adjetivos en Inglés</a>
+        <a href="https://www.cokitos.com/rutinas-diarias-en-ingles-daily-routines/" target="_blank" rel="noopener noreferrer" class="btn-recurso"><span class="emoji-recurso">⏰</span> Daily Routines (Inglés)</a>
+        <a href="https://www.cokitos.com/catch-that-fish-pescar-letras-en-orden/" target="_blank" rel="noopener noreferrer" class="btn-recurso"><span class="emoji-recurso">🐟</span> Catch That Fish (Letras)</a>
+        <a href="https://www.cokitos.com/pasapalabra-para-ninos/" target="_blank" rel="noopener noreferrer" class="btn-recurso"><span class="emoji-recurso">🔄</span> Pasapalabra Infantil</a>
+      </div>
+    </div>
+
+    <div class="categoria-card">
+      <div class="categoria-titulo">🌍 Ciencias del Mundo</div>
+      <div class="grid-recursos">
+        <a href="https://www.cokitos.com/crucigrama-del-cuerpo-humano/" target="_blank" rel="noopener noreferrer" class="btn-recurso"><span class="emoji-recurso">🦴</span> Cuerpo Humano</a>
+        <a href="https://www.cokitos.com/clasificar-tipos-de-energia-renovables-no-renovables/" target="_blank" rel="noopener noreferrer" class="btn-recurso"><span class="emoji-recurso">⚡</span> Tipos de Energía</a>
+        <a href="https://www.cokitos.com/flags-maniac/" target="_blank" rel="noopener noreferrer" class="btn-recurso"><span class="emoji-recurso">🚩</span> Flags Maniac (Banderas)</a>
+        <a href="https://www.cokitos.com/guess-the-country-adivina-el-pais/" target="_blank" rel="noopener noreferrer" class="btn-recurso"><span class="emoji-recurso">🗺️</span> Guess the Country</a>
+      </div>
+    </div>
+
+    <div class="categoria-card">
+      <div class="categoria-titulo">🤖 Tecnología, Robótica y Lógica</div>
+      <div class="grid-recursos">
+        <a href="https://www.cokitos.com/robotica/" target="_blank" rel="noopener noreferrer" class="btn-recurso"><span class="emoji-recurso">🤖</span> Taller de Robótica</a>
+        <a href="https://www.cokitos.com/sopa-de-letras-de-robotica/" target="_blank" rel="noopener noreferrer" class="btn-recurso"><span class="emoji-recurso">🔍</span> Sopa de Letras Robótica</a>
+        <a href="https://www.cokitos.com/juego-de-mecanografia-en-ingles-informatica-y-tecnologia/" target="_blank" rel="noopener noreferrer" class="btn-recurso"><span class="emoji-recurso">⌨️</span> Mecanografía e Info.</a>
+        <a href="https://www.cokitos.com/the-gate-aventura-de-teletransporte/" target="_blank" rel="noopener noreferrer" class="btn-recurso"><span class="emoji-recurso">🌌</span> Teletransporte: The Gate</a>
+        <a href="https://www.cokitos.com/sokoban-3d-tercer-capitulo/" target="_blank" rel="noopener noreferrer" class="btn-recurso"><span class="emoji-recurso">📦</span> Sokoban 3D</a>
+        <a href="https://www.cokitos.com/juego-de-numeros-binarios/" target="_blank" rel="noopener noreferrer" class="btn-recurso"><span class="emoji-recurso">💾</span> Números Binarios</a>
+        <a href="https://www.cokitos.com/hexaboard-abalone/" target="_blank" rel="noopener noreferrer" class="btn-recurso"><span class="emoji-recurso">⬢</span> Hexaboard Abalone</a>
+      </div>
+    </div>
+
+  </main>
+
+  <a href="a3.html" class="back-nav">« Volver al Menú de Grados</a>
+
+</body>
+</html>
