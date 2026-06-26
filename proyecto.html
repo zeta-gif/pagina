@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nuestro Proyecto - Aventura del Aprendizaje Mágico</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Comic+Neue:wght@700&display=swap');
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Fredoka', sans-serif;
+      color: #1e293b;
+      line-height: 1.6;
+      /* FONDO ESTÁTICO DE CUADRÍCULA DE CUADERNO */
+      background-color: #00d2ff;
+      background-image: 
+        linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(0,210,255,0.4) 100%),
+        linear-gradient(rgba(255, 255, 255, 0.25) 2px, transparent 2px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.25) 2px, transparent 2px);
+      background-size: 100% 100%, 40px 40px, 40px 40px;
+      position: relative;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    /* Sutil confeti escolar de fondo */
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image: 
+        radial-gradient(circle, #ff6b6b 1.5px, transparent 1.5px),
+        radial-gradient(circle, #4ecdc4 1.5px, transparent 1.5px),
+        radial-gradient(circle, #ffeb3b 2px, transparent 2px);
+      background-size: 80px 80px, 120px 120px, 160px 160px;
+      background-position: 0 0, 40px 40px, 20px 60px;
+      opacity: 0.35;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .container {
+      position: relative;
+      z-index: 2;
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 40px 30px;
+      background: #ffffff;
+      border: 6px solid #1e293b;
+      border-radius: 35px;
+      box-shadow: 12px 12px 0px #1e293b;
+    }
+
+    /* TÍTULO PRINCIPAL ESTILO CARICATURA POP */
+    h1 {
+      font-family: 'Fredoka', sans-serif;
+      font-weight: 700;
+      font-size: 3.5rem;
+      text-align: center;
+      background: linear-gradient(180deg, #ff9800 0%, #ff5722 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(2px 2px 0px #1e293b) drop-shadow(-2px -2px 0px #1e293b) drop-shadow(2px -2px 0px #1e293b) drop-shadow(-2px 2px 0px #1e293b);
+      margin-bottom: 30px;
+    }
+
+    /* SUBTÍTULOS CON DISEÑO DE MARCADOR RESALTADOR */
+    h2 {
+      display: inline-block;
+      font-size: 1.8rem;
+      color: #1e293b;
+      margin: 35px 0 20px;
+      background: linear-gradient(120deg, #ffeb3b 0%, #ffeb3b 100%);
+      background-repeat: no-repeat;
+      background-size: 100% 40%;
+      background-position: 0 80%;
+      padding: 0 10px;
+    }
+
+    .intro-box {
+      font-size: 1.15rem;
+      font-weight: 500;
+      color: #1e293b;
+      background: #f8fafc;
+      padding: 20px;
+      border: 4px solid #1e293b;
+      border-radius: 20px;
+      box-shadow: 5px 5px 0px #1e293b;
+      margin-bottom: 25px;
+    }
+
+    /* GRID PARA COMPARTIR PROBLEMÁTICAS POR ESCUELA */
+    .grid-schools {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 25px;
+      margin-top: 15px;
+    }
+
+    .school-card {
+      background: #ffffff;
+      border: 4px solid #1e293b;
+      border-radius: 25px;
+      padding: 25px;
+      box-shadow: 6px 6px 0px #1e293b;
+    }
+
+    .school-card.santa-teresa { background: #fffde7; }
+    .school-card.papatlatla { background: #f0fdf4; }
+
+    .school-card h3 {
+      font-size: 1.4rem;
+      color: #1e293b;
+      margin-bottom: 12px;
+      border-bottom: 3px dashed #1e293b;
+      padding-bottom: 5px;
+    }
+
+    .school-card ul {
+      list-style: none;
+      margin-top: 10px;
+    }
+
+    .school-card ul li {
+      position: relative;
+      padding-left: 22px;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    .school-card ul li::before {
+      content: "❌";
+      position: absolute;
+      left: 0;
+      font-size: 0.9rem;
+    }
+
+    /* LISTA ESTILO CAJAS NEO-BRUTALISTAS ASOCIADAS */
+    .pop-list {
+      list-style: none;
+    }
+
+    .pop-list li {
+      position: relative;
+      background: #ffffff;
+      border: 3px solid #1e293b;
+      border-radius: 18px;
+      padding: 15px 20px;
+      margin-bottom: 15px;
+      box-shadow: 4px 4px 0px #1e293b;
+      font-size: 1.05rem;
+      font-weight: 500;
+    }
+
+    .pop-list.causes li {
+      border-left: 10px solid #ff6b6b;
+    }
+
+    .pop-list.objectives li {
+      border-left: 10px solid #4ecdc4;
+    }
+
+    /* BOTÓN REGRESAR AL INICIO */
+    .back-button {
+      display: inline-block;
+      margin-top: 35px;
+      padding: 14px 35px;
+      background: #ff9800;
+      color: white;
+      text-decoration: none;
+      border: 4px solid #1e293b;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 1.2rem;
+      box-shadow: 5px 5px 0px #1e293b;
+      transition: all 0.2s;
+    }
+
+    .back-button:hover {
+      transform: scale(1.04) translateY(-2px);
+      box-shadow: 7px 7px 0px #1e293b;
+    }
+    .back-button:active {
+      transform: scale(1) translateY(2px);
+      box-shadow: 2px 2px 0px #1e293b;
+    }
+
+    footer {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 35px;
+      color: #1e293b;
+      font-weight: 600;
+      font-size: 1.1rem;
+      text-shadow: 1px 1px 0px rgba(255,255,255,0.5);
+    }
+
+    @media (max-width: 640px) {
+      h1 { font-size: 2.3rem; }
+      .container { padding: 25px 15px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🌟 Nuestro Proyecto</h1>
+    
+    <h2>1. Análisis de Contexto</h2>
+    <div class="intro-box">
+      <p>Las escuelas de Santa Teresa y Papatlatla enfrentan diversos retos educativos que afectan el aprendizaje y desarrollo de los alumnos. Estos desafíos están relacionados con los procesos de enseñanza, el acompañamiento familiar y las condiciones sociales.</p>
+    </div>
+
+    <h2>2. Problemáticas Principales</h2>
+    <div class="grid-schools">
+      <div class="school-card santa-teresa">
+        <h3>📍 Santa Teresa</h3>
+        <p><strong>Brecha importante en autonomía:</strong> Algunos alumnos muestran iniciativa y capacidad de resolución, mientras otros dependen constantemente de la ayuda del docente o de sus compañeros.</p>
+      </div>
+      
+      <div class="school-card papatlatla">
+        <h3>📍 Papatlatla</h3>
+        <p><strong>Rezago significativo en lectoescritura:</strong> Esto genera una serie de barreras críticas en el aula diaria:</p>
+        <ul>
+          <li>Bajo rendimiento académico.</li>
+          <li>Dificultad para comprender instrucciones.</li>
+          <li>Poco interés en las actividades escolares.</li>
+          <li>Inseguridad y frustración personal.</li>
+          <li>Limitaciones para comunicarse y participar.</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2>3. Posibles Causas</h2>
+    <ul class="pop-list causes">
+      <li>📌 <strong>Falta de acompañamiento familiar</strong> en las tareas diarias.</li>
+      <li>📌 <strong>Escasos hábitos de lectura</strong> modelados en el entorno directo.</li>
+      <li>📌 <strong>Rezago educativo acumulado</strong> de ciclos anteriores.</li>
+      <li>📌 <strong>Oportunidades limitadas de práctica</strong> interactiva y didáctica.</li>
+      <li>📌 <strong>Desafíos en atención y comprensión</strong> general dentro del grupo.</li>
+    </ul>
+
+    <h2>4. Propósito del Proyecto</h2>
+    <div class="intro-box" style="border-left: 10px solid #ff9800; background: #fffbf5;">
+      <p><strong>Propósito General:</strong><br>
+      Fortalecer las competencias lectoras y la autonomía de los alumnos mediante estrategias pedagógicas innovadoras y materiales didácticos atractivos.</p>
+    </div>
+
+    <h2>🎯 Objetivos Específicos</h2>
+    <ul class="pop-list objectives">
+      <li><strong>📚 Fomento lector:</strong> Estimular el interés y el hábito de la lectura con metodologías lúdicas.</li>
+      <li><strong>💪 Desarrollo de la autonomía:</strong> Promover la independencia, responsabilidad y toma de decisiones.</li>
+      <li><strong>⚡ Nivelación educativa:</strong> Apoyar de forma prioritaria a los alumnos con rezago lector.</li>
+      <li><strong>👨‍👩‍👧 Vinculación comunitaria:</strong> Integrar a los padres como agentes activos en la educación.</li>
+      <li><strong>🌈 Ambientes de aprendizaje:</strong> Crear entornos inclusivos, motivadores y participativos.</li>
+    </ul>
+
+    <div style="text-align: center;">
+      <a href="index.html" class="back-button">← Regresar al Inicio</a>
+    </div>
+  </div>
+
+  <footer>
+    🌱 Aventura del Aprendizaje Mágico
+  </footer>
+</body>
+</html>

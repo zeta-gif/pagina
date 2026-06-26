@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Para Padres - Aventura del Aprendizaje Mágico</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Comic+Neue:wght@700&display=swap');
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Fredoka', sans-serif;
+      color: #1e293b;
+      line-height: 1.6;
+      /* FONDO ESTÁTICO DE CUADRÍCULA DE CUADERNO */
+      background-color: #00d2ff;
+      background-image: 
+        linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(0,210,255,0.4) 100%),
+        linear-gradient(rgba(255, 255, 255, 0.25) 2px, transparent 2px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.25) 2px, transparent 2px);
+      background-size: 100% 100%, 40px 40px, 40px 40px;
+      position: relative;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    /* Sutil confeti escolar de fondo */
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image: 
+        radial-gradient(circle, #ff6b6b 1.5px, transparent 1.5px),
+        radial-gradient(circle, #4ecdc4 1.5px, transparent 1.5px),
+        radial-gradient(circle, #ffeb3b 2px, transparent 2px);
+      background-size: 80px 80px, 120px 120px, 160px 160px;
+      background-position: 0 0, 40px 40px, 20px 60px;
+      opacity: 0.35;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .container {
+      position: relative;
+      z-index: 2;
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 40px 30px;
+      background: #ffffff;
+      border: 6px solid #1e293b;
+      border-radius: 35px;
+      box-shadow: 12px 12px 0px #1e293b;
+    }
+
+    /* TÍTULO PRINCIPAL ESTILO CARICATURA POP */
+    h1 {
+      font-family: 'Fredoka', sans-serif;
+      font-weight: 700;
+      font-size: 3.5rem;
+      text-align: center;
+      background: linear-gradient(180deg, #fff176 0%, #ff9800 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(2px 2px 0px #1e293b) drop-shadow(-2px -2px 0px #1e293b) drop-shadow(2px -2px 0px #1e293b) drop-shadow(-2px 2px 0px #1e293b);
+      margin-bottom: 5px;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #64748b;
+      margin-bottom: 40px;
+    }
+
+    /* SUBTÍTULOS CON DISEÑO DE MARCADOR RESALTADOR */
+    h2 {
+      display: inline-block;
+      font-size: 1.8rem;
+      color: #1e293b;
+      margin: 35px 0 20px;
+      background: linear-gradient(120deg, #ffeb3b 0%, #ffeb3b 100%);
+      background-repeat: no-repeat;
+      background-size: 100% 40%;
+      background-position: 0 80%;
+      padding: 0 10px;
+    }
+
+    .section {
+      margin-bottom: 20px;
+    }
+
+    .section p {
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: #334155;
+      background: #f8fafc;
+      padding: 15px 20px;
+      border: 3px solid #1e293b;
+      border-radius: 15px;
+    }
+
+    /* RECUADROS DE RECURSOS */
+    .resources-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 25px;
+      margin-top: 20px;
+    }
+
+    .resource-card {
+      background: #ffffff;
+      border: 4px solid #1e293b;
+      border-radius: 25px;
+      padding: 25px 20px;
+      box-shadow: 6px 6px 0px #1e293b;
+      transition: all 0.2s;
+    }
+
+    .resource-card:hover {
+      transform: scale(1.02) translateY(-3px);
+      box-shadow: 8px 8px 0px #1e293b;
+    }
+
+    .resource-card h3 {
+      font-size: 1.3rem;
+      margin-bottom: 15px;
+      color: #1e293b;
+    }
+
+    .resource-card ul, .section ul {
+      list-style: none;
+    }
+
+    /* LINKS TRANSFORMADOS EN BOTONES POP INTERACTIVOS */
+    .resource-card ul li {
+      margin-bottom: 12px;
+    }
+
+    .resource-card ul li a {
+      display: block;
+      padding: 10px 15px;
+      background: #f1f5f9;
+      border: 3px solid #1e293b;
+      border-radius: 14px;
+      color: #1e293b;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      box-shadow: 3px 3px 0px #1e293b;
+      transition: all 0.15s;
+    }
+
+    .resource-card ul li a:hover {
+      background: #e2e8f0;
+      transform: translateY(-2px);
+      box-shadow: 4px 4px 0px #1e293b;
+    }
+
+    /* LISTA DE CONSEJOS Y AYUDA DESDE CASA */
+    .tips-list li {
+      position: relative;
+      background: #ffffff;
+      border: 3px solid #1e293b;
+      border-radius: 18px;
+      padding: 15px 20px;
+      margin-bottom: 15px;
+      box-shadow: 4px 4px 0px #1e293b;
+      font-size: 1.05rem;
+      font-weight: 500;
+    }
+
+    /* Colores variables sutiles para viñetas internas de consejos */
+    .resource-card:nth-child(4) ul li {
+      position: relative;
+      padding-left: 25px;
+      margin-bottom: 10px;
+      font-weight: 500;
+      font-size: 1rem;
+    }
+    .resource-card:nth-child(4) ul li::before {
+      content: "⚡";
+      position: absolute;
+      left: 0;
+    }
+
+    /* BOTÓN REGRESAR AL INICIO */
+    .back-button {
+      display: inline-block;
+      margin-top: 30px;
+      padding: 14px 35px;
+      background: #ff9800;
+      color: white;
+      text-decoration: none;
+      border: 4px solid #1e293b;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 1.2rem;
+      box-shadow: 5px 5px 0px #1e293b;
+      transition: all 0.2s;
+    }
+
+    .back-button:hover {
+      transform: scale(1.04) translateY(-2px);
+      box-shadow: 7px 7px 0px #1e293b;
+    }
+    .back-button:active {
+      transform: scale(1) translateY(2px);
+      box-shadow: 2px 2px 0px #1e293b;
+    }
+
+    footer {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 35px;
+      color: #1e293b;
+      font-weight: 600;
+      font-size: 1.1rem;
+      text-shadow: 1px 1px 0px rgba(255,255,255,0.5);
+    }
+
+    @media (max-width: 640px) {
+      h1 { font-size: 2.5rem; }
+      .container { padding: 25px 15px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>👨‍👩‍👧 Para Padres</h1>
+    <p class="subtitle">Su apoyo es clave en la educación de sus hijos</p>
+
+    <div class="section">
+      <h2>🎯 Objetivo</h2>
+      <p>Este espacio está basado en el propósito número 4: "Vinculación comunitaria: Integrar a los padres de familia como agentes activos en el proceso educativo de sus hijos". Con ayuda de esta página buscamos que los padres desarrollen y conozcan más herramientas educativas para el desarrollo académico de los niños.</p>
+    </div>
+
+    <div class="section">
+      <h2>📚 Recursos Recomendados</h2>
+      
+      <div class="resources-grid">
+        <div class="resource-card">
+          <h3>🎮 Juegos Educativos</h3>
+          <ul>
+            <li><a href="https://www.abcya.com/" target="_blank">ABCya - Por grado escolar</a></li>
+            <li><a href="https://www.starfall.com/" target="_blank">Starfall - Lectura y fonética</a></li>
+            <li><a href="https://www.coolmathgames.com/" target="_blank">Cool Math Games</a></li>
+          </ul>
+        </div>
+
+        <div class="resource-card">
+          <h3>📖 Lectura Digital</h3>
+          <ul>
+            <li><a href="https://www.storylineonline.net/" target="_blank">Storyline Online - Actores</a></li>
+            <li><a href="https://lectura.fundacionbbva.mx/" target="_blank">Fundación BBVA - Lectura</a></li>
+            <li><a href="https://www.epic.com/" target="_blank">Epic! - Libros digitales</a></li>
+          </ul>
+        </div>
+
+        <div class="resource-card">
+          <h3>📹 Videos y Música</h3>
+          <ul>
+            <li><a href="https://www.youtube.com/c/SuperSimpleSongs" target="_blank">Super Simple Songs</a></li>
+            <li><a href="https://www.youtube.com/c/Blippi" target="_blank">Blippi - Aprendizaje</a></li>
+            <li><a href="https://www.youtube.com/c/Canticos" target="_blank">Canticos</a></li>
+          </ul>
+        </div>
+
+        <div class="resource-card">
+          <h3>💡 Consejos Rápidos</h3>
+          <ul>
+            <li>Establezcan una rutina diaria de lectura (15-20 minutos).</li>
+            <li>Celebren los esfuerzos más que los resultados finales.</li>
+            <li>Pregunten a sus hijos qué aprendieron en el día.</li>
+            <li>Usen juegos cotidianos para reforzar el aprendizaje.</li>
+            <li>Comuníquense regularmente con sus maestros.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>🌟 ¿Cómo puedo ayudar desde casa?</h2>
+      <ul class="tips-list">
+        <li><strong>Dediquen 10 minutos al día</strong> a leer juntos en voz alta, turnándose para leer. Esto fortalece la conexión emocional y el gusto por la lectura.</li>
+        <li><strong>Conviertan los errores en oportunidades:</strong> En lugar de corregir inmediatamente, pregunten: “¿Qué crees que podríamos intentar diferente la próxima vez?”</li>
+        <li><strong>Usen la vida diaria como aula:</strong> Pidan a sus hijos que lean los precios en la tienda, calculen el cambio o escriban la lista del mandado.</li>
+        <li><strong>Creen un “Rincón de Logros”</strong> en casa donde peguen los trabajos, dibujos o estrellas que obtengan en la Aventura del Aprendizaje Mágico.</li>
+        <li><strong>Practiquen la autonomía</strong> con pequeñas responsabilidades según su edad (guardar sus útiles, elegir su ropa, preparar su mochila).</li>
+        <li><strong>Después de jugar en la plataforma,</strong> pregunten: “¿Qué fue lo más difícil que lograste hoy?” en vez de solo “¿Qué hiciste?”</li>
+        <li><strong>Equilibren el tiempo de pantallas</strong> con actividades manuales (dibujar, armar rompecabezas, cocinar juntos).</li>
+        <li><strong>Celebren los avances pequeños:</strong> una palabra nueva leída, un problema resuelto solo, o haber pedido ayuda de forma respetuosa.</li>
+        <li><strong>Creen un “Momento Familiar de Aprendizaje”</strong> una vez por semana donde toda la familia haga una actividad juntos.</li>
+        <li><strong>Muestren interés genuino</strong> por lo que aprenden. Los niños se motivan mucho más cuando sienten que sus papás valoran su esfuerzo.</li>
+      </ul>
+    </div>
+
+    <div style="text-align: center;">
+      <a href="index.html" class="back-button">← Regresar al Inicio</a>
+    </div>
+  </div>
+
+  <footer>
+    🌱 Aventura del Aprendizaje Mágico 
+  </footer>
+</body>
+</html>
