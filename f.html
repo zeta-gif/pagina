@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Banco de Herramientas por Grado - Aventura del Aprendizaje Mágico</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap');
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Fredoka', sans-serif;
+      color: #1e293b;
+      line-height: 1.6;
+      background-color: #00d2ff;
+      background-image: 
+        linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(0,210,255,0.4) 100%),
+        linear-gradient(rgba(255, 255, 255, 0.25) 2px, transparent 2px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.25) 2px, transparent 2px);
+      background-size: 100% 100%, 40px 40px, 40px 40px;
+      position: relative;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image: 
+        radial-gradient(circle, #ff6b6b 1.5px, transparent 1.5px),
+        radial-gradient(circle, #4ecdc4 1.5px, transparent 1.5px),
+        radial-gradient(circle, #ffeb3b 2px, transparent 2px);
+      background-size: 80px 80px, 120px 120px, 160px 160px;
+      background-position: 0 0, 40px 40px, 20px 60px;
+      opacity: 0.35;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .container {
+      position: relative;
+      z-index: 2;
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 40px 20px;
+      background: #ffffff;
+      border: 6px solid #1e293b;
+      border-radius: 35px;
+      box-shadow: 12px 12px 0px #1e293b;
+    }
+
+    h1 {
+      font-size: 3.5rem;
+      text-align: center;
+      background: linear-gradient(180deg, #4ecdc4 0%, #00a896 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(2px 2px 0px #1e293b) drop-shadow(-2px -2px 0px #1e293b) drop-shadow(2px -2px 0px #1e293b) drop-shadow(-2px 2px 0px #1e293b);
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #64748b;
+      margin-bottom: 40px;
+    }
+
+    /* PESTAÑAS (CAMPOS FORMATIVOS) */
+    .tabs-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 25px;
+      border-bottom: 6px solid #1e293b;
+    }
+
+    .tab-button {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      padding: 12px 20px;
+      cursor: pointer;
+      background: #f1f5f9;
+      border: 4px solid #1e293b;
+      border-bottom: none;
+      border-radius: 16px 16px 0 0;
+      margin-bottom: -6px;
+      transition: all 0.15s;
+      color: #1e293b;
+    }
+
+    .tab-button:hover { background: #e2e8f0; transform: translateY(-2px); }
+    .tab-button[data-target="lenguajes"].active { background: #ffbe0b; color: #000; padding-bottom: 16px; }
+    .tab-button[data-target="saberes"].active { background: #3a86ff; color: #fff; padding-bottom: 16px; }
+    .tab-button[data-target="etica"].active { background: #ff006e; color: #fff; padding-bottom: 16px; }
+    .tab-button[data-target="humano"].active { background: #8338ec; color: #fff; padding-bottom: 16px; }
+
+    /* FILTROS POR GRADO */
+    .grade-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 30px;
+      background: #f8fafc;
+      padding: 15px;
+      border: 3px solid #1e293b;
+      border-radius: 20px;
+    }
+
+    .filter-label {
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      margin-right: 10px;
+      color: #475569;
+    }
+
+    .filter-button {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      padding: 8px 16px;
+      cursor: pointer;
+      background: #ffffff;
+      border: 3px solid #1e293b;
+      border-radius: 12px;
+      box-shadow: 3px 3px 0px #1e293b;
+      transition: all 0.1s;
+    }
+
+    .filter-button:hover { transform: translateY(-2px); box-shadow: 4px 4px 0px #1e293b; }
+    .filter-button.active { background: #4ecdc4; color: white; transform: translateY(1px); box-shadow: 1px 1px 0px #1e293b; }
+
+    /* CONTENIDO DE LAS PESTAÑAS */
+    .tab-content { display: none; }
+    .tab-content.active { display: block; animation: fadeIn 0.3s ease-in-out; }
+
+    /* SECCIONES INTERNAS DE GRADOS */
+    .grade-section { display: none; margin-bottom: 40px; }
+    /* Clase auxiliar para la sección activa por defecto */
+    .grade-section.default-visible { display: block; }
+
+    .grade-title {
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+      padding-bottom: 5px;
+      border-bottom: 3px dashed #cbd5e1;
+      color: #475569;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* GRID Y TARJETAS */
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 25px;
+    }
+
+    .tool-card {
+      background: #ffffff;
+      border: 4px solid #1e293b;
+      border-radius: 22px;
+      padding: 20px;
+      box-shadow: 6px 6px 0px #1e293b;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+    }
+
+    .badge-container {
+      position: absolute;
+      top: -12px;
+      right: 15px;
+      display: flex;
+      gap: 5px;
+    }
+
+    .tool-num, .tool-grade {
+      background: #ffeb3b;
+      border: 3px solid #1e293b;
+      padding: 2px 10px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      box-shadow: 2px 2px 0px #1e293b;
+    }
+    .tool-grade { background: #ff9f1c; color: white; }
+
+    .tool-card h3 { font-size: 1.25rem; margin-bottom: 10px; padding-right: 80px; color: #1e293b; }
+    .tool-card p { font-size: 0.95rem; font-weight: 500; color: #475569; margin-bottom: 20px; flex-grow: 1; }
+
+    .tool-link {
+      display: block;
+      text-align: center;
+      padding: 10px;
+      background: #f8fafc;
+      border: 3px solid #1e293b;
+      border-radius: 14px;
+      color: #1e293b;
+      text-decoration: none;
+      font-weight: 700;
+      box-shadow: 3px 3px 0px #1e293b;
+      transition: all 0.15s;
+    }
+    .tool-link:hover { transform: translateY(-2px); box-shadow: 5px 5px 0px #1e293b; }
+
+    [data-content="lenguajes"] .tool-link:hover { background: #fff3b0; }
+    [data-content="saberes"] .tool-link:hover { background: #bfdbfe; }
+    [data-content="etica"] .tool-link:hover { background: #fbcfe8; }
+    [data-content="humano"] .tool-link:hover { background: #e9d5ff; }
+
+    .back-button {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 14px 35px;
+      background: #ff9800;
+      color: white;
+      text-decoration: none;
+      border: 4px solid #1e293b;
+      border-radius: 50px;
+      font-weight: 700;
+      box-shadow: 5px 5px 0px #1e293b;
+      transition: all 0.2s;
+    }
+    .back-button:hover { transform: scale(1.04) translateY(-2px); box-shadow: 7px 7px 0px #1e293b; }
+
+    footer { text-align: center; padding: 35px; color: #1e293b; font-weight: 600; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    @media (max-width: 768px) {
+      h1 { font-size: 2.3rem; }
+      .tabs-container { flex-direction: column; gap: 5px; border-bottom: none; }
+      .tab-button { border-bottom: 4px solid #1e293b !important; border-radius: 12px; margin-bottom: 0; }
+      .tab-button.active { padding-bottom: 12px !important; }
+      .grade-filters { flex-direction: column; align-items: stretch; }
+      .filter-button { text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>🧰 Banco de Herramientas</h1>
+    <p class="subtitle">120 recursos clasificados por Campo Formativo y Grado Escolar</p>
+
+    <div class="tabs-container">
+      <button class="tab-button active" data-target="lenguajes">🗣️ 1. Lenguajes</button>
+      <button class="tab-button" data-target="saberes">🔬 2. Saberes y P. C.</button>
+      <button class="tab-button" data-target="etica">🌍 3. Ética, Nat. y Soc.</button>
+      <button class="tab-button" data-target="humano">💪 4. De lo Humano</button>
+    </div>
+
+    <div class="grade-filters">
+      <span class="filter-label">🎯 Selecciona un Grado:</span>
+      <button class="filter-button active" data-grade="1-2">🎒 1º y 2º de Primaria</button>
+      <button class="filter-button" data-grade="3-4">📘 3º y 4º de Primaria</button>
+      <button class="filter-button" data-grade="5-6">🚀 5º y 6º de Primaria</button>
+    </div>
+
+    <div class="tab-content active" data-content="lenguajes">
+      
+      <div class="grade-section default-visible" data-section-grade="1-2">
+        <h2 class="grade-title">🎒 1º y 2º de Primaria</h2>
+        <div class="tools-grid">
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">1º-2º</span><span class="tool-num">#1</span></div><h3>Cokitos</h3><p>Juegos online gratuitos de lógica, memoria, vocabulario y lectoescritura. Sin registro.</p><a href="https://www.cokitos.com/" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">1º-2º</span><span class="tool-num">#2</span></div><h3>Mundo Primaria Lengua</h3><p>Cientos de juegos de ortografía, sílabas, gramática y comprensión lectora.</p><a href="https://www.mundoprimaria.com/juegos-educativos/juegos-lenguaje" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">1º-2º</span><span class="tool-num">#4</span></div><h3>Cristic - Castellano 1º y 2º</h3><p>Juegos gratuitos de lengua castellana para primer ciclo de primaria.</p><a href="https://www.cristic.com/1o-y-2o-de-primaria/castellano/" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">1º-2º</span><span class="tool-num">#6</span></div><h3>Juegos Arcoiris Leer</h3><p>Juegos de letras, sílabas y lectura para primeros grados.</p><a href="https://www.juegosarcoiris.com/actividades/aprender-a-leer/" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">1º-2º</span><span class="tool-num">#7</span></div><h3>Educaenvivo Leer</h3><p>Juegos enfocados solo en el proceso de aprender a leer, sin necesidad de escribir.</p><a href="https://www.educaenvivo.com/juegos-educativos-online/aprender-a-leer/" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">1º-2º</span><span class="tool-num">#8</span></div><h3>Educaenvivo Lectoescritura</h3><p>Juegos de lectura y escritura combinadas, gratis y sin descargas.</p><a href="https://www.educaenvivo.com/juegos-educativos-online/lectoescritura/" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">1º-2º</span><span class="tool-num">#9</span></div><h3>Vedoque</h3><p>Juegos clásicos en español para aprender a leer, escribir y repasar matemáticas.</p><a href="https://www.vedoque.com/" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">1º-2º</span><span class="tool-num">#11</span></div><h3>Smile and Learn Español</h3><p>Cuentos con valores y vídeos didácticos de lectoescritura para niños de 3 a 12 años.</p><a href="https://www.youtube.com/channel/UCCZpm6436NlU_lCBAIEZmQg" target="_blank" class="tool-link">Ver Canal →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">1º-2º</span><span class="tool-num">#21</span></div><h3>Juegos Arcoíris Portal</h3><p>Juegos de letras, números, lógica y memoria para niños de 3 a 12 años.</p><a href="https://www.juegosarcoiris.com/" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">1º-2º</span><span class="tool-num">#30</span></div><h3>Smile and Learn (Web)</h3><p>Cuentos, juegos y vídeos en español; incluye una excelente selección gratuita.</p><a href="https://www.smileandlearn.com/" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+        </div>
+      </div>
+
+      <div class="grade-section" data-section-grade="3-4">
+        <h2 class="grade-title">📘 3º y 4º de Primaria</h2>
+        <div class="tools-grid">
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">3º-4º</span><span class="tool-num">#3</span></div><h3>Mundo Primaria Inglés</h3><p>Juegos de vocabulario y gramática inglesa para primaria.</p><a href="https://www.mundoprimaria.com/juegos-educativos/juegos-de-ingles" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">3º-4º</span><span class="tool-num">#10</span></div><h3>La Eduteca (YouTube)</h3><p>Vídeos breves (menos de 10 min) sobre lengua, literatura y gramática para primaria.</p><a href="https://www.youtube.com/c/LaEduteca" target="_blank" class="tool-link">Ver Canal →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">3º-4º</span><span class="tool-num">#12</span></div><h3>Happy Learning Español</h3><p>Vídeos animados sobre lengua, ortografía e historia narrados por el personaje Dani.</p><a href="https://www.youtube.com/c/HappyLearningEs" target="_blank" class="tool-link">Ver Canal →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">3º-4º</span><span class="tool-num">#18</span></div><h3>Cristic - Castellano 3º y 4º</h3><p>Juegos de lengua, ortografía y vocabulario para el segundo ciclo de primaria.</p><a href="https://www.cristic.com/3o-y-40-primaria/" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">3º-4º</span><span class="tool-num">#19</span></div><h3>Poki - Juegos Educativos</h3><p>Juegos de palabras, vocabulario y lógica jugables sin descarga ni registro.</p><a href="https://poki.com/es/educativos" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">3º-4º</span><span class="tool-num">#20</span></div><h3>Juegos creados por Cristic</h3><p>Pasapalabras, memorys y juegos interactivos de vocabulario y emociones creados en Canva.</p><a href="https://www.cristic.com/juegos-educativos/juegos-creados-por-cristic/" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">3º-4º</span><span class="tool-num">#22</span></div><h3>Clases Particulares Ávila</h3><p>Contenido educativo en video enfocado en explicaciones para primaria.</p><a href="https://www.youtube.com/@ClasesParticularesenAvila" target="_blank" class="tool-link">Ver Canal →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">3º-4º</span><span class="tool-num">#23</span></div><h3>Cristic Juegos Generales</h3><p>Juegos de comprensión lectora, memoria, vocabulario y cultura general.</p><a href="https://www.cristic.com/portfolio_tags/juegos/" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">3º-4º</span><span class="tool-num">#25</span></div><h3>Cristic - Vocabulario</h3><p>Juegos para repasar vocabulario, abecedario y ortografía en español.</p><a href="https://www.cristic.com/portfolio_tags/lengua-castellana/" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">3º-4º</span><span class="tool-num">#27</span></div><h3>Cosmic Kids Yoga Español</h3><p>Cuentos narrados en movimiento que combinan lectura, imaginación y expresión.</p><a href="https://www.youtube.com/playlist?list=PL8snGkhBF7njrfPJ9q3bTmbROrc4408" target="_blank" class="tool-link">Ver Playlist →</a></div>
+        </div>
+      </div>
+
+      <div class="grade-section" data-section-grade="5-6">
+        <h2 class="grade-title">🚀 5º y 6º de Primaria</h2>
+        <div class="tools-grid">
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">5º-6º</span><span class="tool-num">#5</span></div><h3>Cristic Castellano 5º y 6º</h3><p>Juegos de ortografía, dictados y gramática para los últimos grados.</p><a href="https://www.cristic.com/portfolio category/castellano-50-v-60de--primaria/" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">5º-6º</span><span class="tool-num">#13</span></div><h3>unProfesor (Web)</h3><p>Videoclases de lengua, gramática y literatura con ejercicios imprimibles.</p><a href="https://www.unprofesor.com/" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">5º-6º</span><span class="tool-num">#14</span></div><h3>unProfesor (YouTube)</h3><p>Canal con las videoclases de lengua, matemáticas e historia de la web unProfesor.</p><a href="https://www.youtube.com/unProfesor" target="_blank" class="tool-link">Ver Canal →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">5º-6º</span><span class="tool-num">#15</span></div><h3>Vikidia en Español</h3><p>Enciclopedia libre escrita para niños de 8 a 13 años; ideal para buscar información segura.</p><a href="https://es.vikidia.org/wiki/Vikidia:Portada" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">5º-6º</span><span class="tool-num">#16</span></div><h3>FlexFlix Kids (YouTube)</h3><p>Vídeos educativos de matemáticas, ciencias, historia y lengua (antes 'Aula365').</p><a href="https://www.youtube.com/c/Aula365edu" target="_blank" class="tool-link">Ver Canal →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">5º-6º</span><span class="tool-num">#17</span></div><h3>Academia Play (YouTube)</h3><p>Vídeos animados que resumen procesos históricos y culturales en pocos minutos.</p><a href="https://www.youtube.com/channel/UCv05qOuJ6lqbe-EyQibJqwQ" target="_blank" class="tool-link">Ver Canal →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">5º-6º</span><span class="tool-num">#24</span></div><h3>CuriosaMente (YouTube)</h3><p>Videos animados que responden preguntas curiosas sobre lengua, ciencia e historia.</p><a href="https://www.youtube.com/channel/UCX16cLWl6dCjIZMqUBxqGkA" target="_blank" class="tool-link">Ver Canal →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">5º-6º</span><span class="tool-num">#26</span></div><h3>unicoos (Web)</h3><p>Aunque enfocado en secundaria, ofrece vídeos introductorios útiles para 6º de primaria.</p><a href="https://www.unicoos.com/" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">5º-6º</span><span class="tool-num">#28</span></div><h3>NASA en Español (Web)</h3><p>Artículos y vídeos en español sobre el espacio, redactados de forma muy sencilla.</p><a href="https://www.nasa.gov/es/" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">5º-6º</span><span class="tool-num">#29</span></div><h3>NASA Space Place</h3><p>Juegos, artículos y actividades de ciencia espacial para niños de primaria en español.</p><a href="spaceplace.nasa.gov/sp/" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="tab-content" data-content="saberes">
+      
+      <div class="grade-section default-visible" data-section-grade="1-2">
+        <h2 class="grade-title">🎒 1º y 2º de Primaria</h2>
+        <div class="tools-grid">
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">1º-2º</span><span class="tool-num">#1</span></div><h3>Cokitos Matemáticas</h3><p>Juegos gratuitos de cálculo, tablas de multiplicar y lógica numérica interactiva.</p><a href="https://www.cokitos.com/" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">1º-2º</span><span class="tool-num">#2</span></div><h3>Mundo Primaria Matemáticas</h3><p>Juegos de sumas, restas, fracciones, geometría y números romanos.</p><a href="https://www.mundoprimaria.com/juegos-educativos" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">1º-2º</span><span class="tool-num">#3</span></div><h3>Juegos Arcoiris Mate</h3><p>La Máquina de Multiplicar, El Tren de los Números, fracciones básicas y más.</p><a href="https://www.juegosarcoiris.com/" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">1º-2º</span><span class="tool-num">#24</span></div><h3>Juegos Arcoiris Conteo</h3><p>Divertidos juegos de números, lógica, secuencias y conteo inicial para primaria.</p><a href="https://www.juegosarcoiris.com/" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">1º-2º</span><span class="tool-num">#30</span></div><h3>Cristic Números Iniciales</h3><p>Actividades muy sencillas que combinan nociones de ciencias con lectoescritura.</p><a href="https://www.cristic.com/1o-2o-y-3o-infantil/castellano/" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+        </div>
+      </div>
+
+      <div class="grade-section" data-section-grade="3-4">
+        <h2 class="grade-title">📘 3º y 4º de Primaria</h2>
+        <div class="tools-grid">
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">3º-4º</span><span class="tool-num">#4</span></div><h3>Cristic - 3º y 4º Primaria</h3><p>Juegos lúdicos de matemáticas, ciencias y lengua para el segundo ciclo.</p><a href="https://www.cristic.com/3o-y-40-primaria/" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">3º-4º</span><span class="tool-num">#7</span></div><h3>Math2me Kids</h3><p>Canal de YouTube dedicado exclusivamente a contenido de matemáticas para primaria alta.</p><a href="https://www.youtube.com/math2mekids" target="_blank" class="tool-link">Ver Canal →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">3º-4º</span><span class="tool-num">#10</span></div><h3>La Eduteca - C. Naturales</h3><p>Vídeos breves sobre el cuerpo humano, los seres vivos y fenómenos de la naturaleza.</p><a href="https://www.youtube.com/c/LaEduteca" target="_blank" class="tool-link">Ver Canal →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">3º-4º</span><span class="tool-num">#14</span></div><h3>Happy Learning C. Naturales</h3><p>Vídeos animados que explican fenómenos científicos y la naturaleza de forma sencilla.</p><a href="https://www.youtube.com/c/HappyLearningEs" target="_blank" class="tool-link">Ver Canal →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">3º-4º</span><span class="tool-num">#20</span></div><h3>Toporopa Geografía Física</h3><p>Cuestionarios interactivos sobre ríos, montañas, mares y otros accidentes geográficos.</p><a href="https://www.toporopa.eu/es/" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">3º-4º</span><span class="tool-num">#21</span></div><h3>Cokitos Retos de Lógica</h3><p>Crucigramas numéricos, divertidos retos de cálculo mental y juegos de pura lógica.</p><a href="https://www.cokitos.com/" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">3º-4º</span><span class="tool-num">#22</span></div><h3>Cristic Juegos Ciencias</h3><p>Juegos didácticos del cuerpo humano, animales y ciencias naturales básicas.</p><a href="https://www.cristic.com/portfolio_tags/juegos/" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">3º-4º</span><span class="tool-num">#23</span></div><h3>Poki Juegos de Mate</h3><p>Desafíos rápidos de sumas, restas, multiplicación y división en el navegador.</p><a href="https://poki.com/es/educativos" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">3º-4º</span><span class="tool-num">#25</span></div><h3>Math2me Geometría</h3><p>Listas de reproducción especializadas con cómputos básicos explicados paso a paso.</p><a href="https://www.youtube.com/channel/UCB34YbuG6ThXJzJsDAlI5Dw" target="_blank" class="tool-link">Ver Canal →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">3º-4º</span><span class="tool-num">#27</span></div><h3>Smile and Learn Ciencias</h3><p>Vídeos y juegos interactivos de ciencias naturales y matemáticas elementales.</p><a href="https://www.smileandlearn.com/" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">3º-4º</span><span class="tool-num">#28</span></div><h3>Smile and Learn (YouTube)</h3><p>Vídeos didácticos excelentes sobre el cuerpo humano, ecosistemas, animales y el universo.</p><a href="https://www.youtube.com/channel/UCCZpm6436NlU_lCBAIEZmQg" target="_blank" class="tool-link">Ver Canal →</a></div>
+        </div>
+      </div>
+
+      <div class="grade-section" data-section-grade="5-6">
+        <h2 class="grade-title">🚀 5º y 6º de Primaria</h2>
+        <div class="tools-grid">
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">5º-6º</span><span class="tool-num">#5</span></div><h3>Cristic - 5º y 6º Primaria</h3><p>Juegos avanzados de matemáticas y ciencias para los últimos grados de primaria.</p><a href="https://www.cristic.com/50-y-60-de-primaria/" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">5º-6º</span><span class="tool-num">#6</span></div><h3>Math2me (YouTube)</h3><p>Miles de clases de matemáticas y física explicadas paso a paso desde primaria.</p><a href="https://www.youtube.com/channel/UCB34YbuG6ThXJzJsDAlI5Dw" target="_blank" class="tool-link">Ver Canal →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">5º-6º</span><span class="tool-num">#8</span></div><h3>unicoos (Web Ciencias)</h3><p>Vídeos, teoría y ejercicios completos de matemáticas, física, química y tecnología.</p><a href="https://www.unicoos.com/" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">5º-6º</span><span class="tool-num">#9</span></div><h3>unicoos (YouTube)</h3><p>Canal de David Calle con vídeos de matemáticas y ciencias explicados de forma muy clara.</p><a href="https://www.youtube.com/channel/UC3RYy7GbMHDvPQGCdAh3H5g" target="_blank" class="tool-link">Ver Canal →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">5º-6º</span><span class="tool-num">#11</span></div><h3>CuriosaMente (Ciencia)</h3><p>Vídeos animados que explican curiosidades científicas y tecnológicas en español.</p><a href="https://www.youtube.com/channel/UCX16cLWl6dCjIZMqUBxqGkA" target="_blank" class="tool-link">Ver Canal →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">5º-6º</span><span class="tool-num">#12</span></div><h3>Academia Play (Ciencia)</h3><p>Vídeos sobre ciencia, tecnología e historia explicados con entretenidas animaciones.</p><a href="https://www.youtube.com/channel/UCv05qOuJ6lqbe-EyQibJqwQ" target="_blank" class="tool-link">Ver Canal →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">5º-6º</span><span class="tool-num">#13</span></div><h3>FlexFlix Kids Ciencias</h3><p>Vídeos de matemáticas y ciencias con espectaculares animaciones para niños.</p><a href="https://www.youtube.com/c/Aula365edu" target="_blank" class="tool-link">Ver Canal →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">5º-6º</span><span class="tool-num">#15</span></div><h3>unProfesor Matemáticas</h3><p>Videoclases de matemáticas organizadas interactivamente por tema y grado escolar.</p><a href="https://www.unprofesor.com/matematicas/" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">5º-6º</span><span class="tool-num">#16</span></div><h3>NASA en Español</h3><p>Noticias, imágenes espaciales e información del universo para todas las edades.</p><a href="https://www.nasa.gov/es/" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">5º-6º</span><span class="tool-num">#17</span></div><h3>NASA Space Place Ciencia</h3><p>Juegos interactivos y actividades de ciencia espacial y terrestre para primaria.</p><a href="spaceplace.nasa.gov/sp/" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">5º-6º</span><span class="tool-num">#18</span></div><h3>Ciencia de la NASA</h3><p>Últimas noticias y grandes descubrimientos científicos de la NASA explicados en español.</p><a href="https://ciencia.nasa.gov/" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">5º-6º</span><span class="tool-num">#19</span></div><h3>PhET Simulaciones</h3><p>Simulaciones gratuitas e interactivas de física, química, biología y matemáticas (U. de Colorado).</p><a href="https://phet.colorado.edu/es/" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">5º-6º</span><span class="tool-num">#26</span></div><h3>Vikidia Ciencias</h3><p>Artículos enciclopédicos muy sencillos sobre animales, plantas y fenómenos naturales.</p><a href="https://es.vikidia.org/wiki/Vikidia:Portada" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">5º-6º</span><span class="tool-num">#29</span></div><h3>unProfesor Primaria</h3><p>Explicaciones claras y fichas de ejercicios imprimibles de matemáticas y ciencias.</p><a href="https://www.unprofesor.com/" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="tab-content" data-content="etica">
+      
+      <div class="grade-section default-visible" data-section-grade="1-2">
+        <h2 class="grade-title">🎒 1º y 2º de Primaria</h2>
+        <div class="tools-grid">
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">1º-2º</span><span class="tool-num">#12</span></div><h3>Nusi y la Primavera</h3><p>Cuento animado interactivo del Proyecto Mochil (EduCaixa) sobre empatía y comprensión social.</p><a href="https://www.educaixa.com/es/-/nusi-y-la-primavera" target="_blank" class="tool-link">Ver Recurso →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">1º-2º</span><span class="tool-num">#13</span></div><h3>Petol y el Señor Roble</h3><p>Cuento animado enfocado en la resolución pacífica de conflictos y convivencia comunitaria.</p><a href="https://www.educaixa.com/-/petol-y-el-senor-roble" target="_blank" class="tool-link">Ver Recurso →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">1º-2º</span><span class="tool-num">#14</span></div><h3>Draki y Sarim</h3><p>Cuento animado que modela estilos saludables de comunicación y convivencia social.</p><a href="https://www.educaixa.com/-/draki-y-sarim" target="_blank" class="tool-link">Ver Recurso →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">1º-2º</span><span class="tool-num">#15</span></div><h3>Laila y la bola mágica</h3><p>Cuento animado que trabaja la autonomía y la responsibility personal dentro de un grupo.</p><a href="https://www.educaixa.com/-/laila-y-la-bola-magica" target="_blank" class="tool-link">Ver Recurso →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">1º-2º</span><span class="tool-num">#16</span></div><h3>Junan y la gruta mágica</h3><p>Cuento animado sobre motivación intrínseca, resiliencia y convivencia armónica en comunidad.</p><a href="https://www.educaixa.com/-/junan-y-la-gruta-magica" target="_blank" class="tool-link">Ver Recurso →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">1º-2º</span><span class="tool-num">#19</span></div><h3>Cristic Valores 1º y 2º</h3><p>Cuentos y actividades interactivas que introducen valores éticos y convivencia.</p><a href="https://www.cristic.com/1o-y-2o-de-primaria/castellano/" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">1º-2º</span><span class="tool-num">#27</span></div><h3>Juegos Arcoiris Culturas</h3><p>Incluye juegos sencillos y dibujos interactivos sobre diversas culturas y países.</p><a href="https://www.juegosarcoiris.com/" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+        </div>
+      </div>
+
+      <div class="grade-section" data-section-grade="3-4">
+        <h2 class="grade-title">📘 3º y 4º de Primaria</h2>
+        <div class="tools-grid">
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">3º-4º</span><span class="tool-num">#1</span></div><h3>La Eduteca - C. Sociales</h3><p>Vídeos breves y concisos sobre geografía, historia y formación cívica para primaria.</p><a href="https://www.youtube.com/c/LaEduteca" target="_blank" class="tool-link">Ver Canal →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">3º-4º</span><span class="tool-num">#4</span></div><h3>Happy Learning Historia</h3><p>Vídeos animados sobre las grandes civilizaciones de la historia y cultura general.</p><a href="https://www.youtube.com/c/HappyLearningEs" target="_blank" class="tool-link">Ver Canal →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">3º-4º</span><span class="tool-num">#6</span></div><h3>Toporopa Mapas</h3><p>Cuestionarios interactivos sobre países, capitales, banderas y geografía mundial.</p><a href="https://www.toporopa.eu/es/" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">3º-4º</span><span class="tool-num">#7</span></div><h3>Seterra Geografía</h3><p>Mapas interactivos divertidos para aprender países, capitales y banderas del mundo.</p><a href="https://www.geoguessr.com/es/quiz/seterra" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">3º-4º</span><span class="tool-num">#9</span></div><h3>Mundo Primaria Banderas</h3><p>Juegos interactivos sobre capitales del mundo, banderas nacionales e historia básica.</p><a href="https://www.mundoprimaria.com/juegos-educativos" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">3º-4º</span><span class="tool-num">#10</span></div><h3>Cristic Juegos de Mapas</h3><p>Juegos interactivos sobre mapas, países, continentes y costumbres del planeta.</p><a href="https://www.cristic.com/portfolio_tags/juegos/" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">3º-4º</span><span class="tool-num">#20</span></div><h3>Cristic Sociales 3º y 4º</h3><p>Juegos interactivos que combinan lengua, nociones de ciencias sociales y cultura general.</p><a href="https://www.cristic.com/3o-y-40-primaria/" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">3º-4º</span><span class="tool-num">#22</span></div><h3>Smile and Learn Biografías</h3><p>Cuentos e historias biográficas animadas (Da Vinci, Earhart) con fuertes valores sociales.</p><a href="https://www.smileandlearn.com/" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">3º-4º</span><span class="tool-num">#23</span></div><h3>Smile and Learn (YouTube Soc.)</h3><p>Vídeos sobre hitos históricos, geografía del mundo y cuentos enfocados en valores.</p><a href="https://www.youtube.com/channel/UCCZpm6436NlU_lCBAIEZmQg" target="_blank" class="tool-link">Ver Canal →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">3º-4º</span><span class="tool-num">#24</span></div><h3>Poki Cultura General</h3><p>Divertidos juegos de preguntas y desafíos de conocimiento general sin descargas.</p><a href="poki.com/es/educativos" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">3º-4º</span><span class="tool-num">#29</span></div><h3>Cristic Portal Social</h3><p>Más de 500 juegos didácticos, con un robusto apartado para geografía y cultura general.</p><a href="https://www.cristic.com/" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">3º-4º</span><span class="tool-num">#30</span></div><h3>Mundo Primaria Portal</h3><p>El mayor portal en español de recursos educativos libres, incluyendo ciencias sociales.</p><a href="https://www.mundoprimaria.com/" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+        </div>
+      </div>
+
+      <div class="grade-section" data-section-grade="5-6">
+        <h2 class="grade-title">🚀 5º y 6º de Primaria</h2>
+        <div class="tools-grid">
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">5º-6º</span><span class="tool-num">#2</span></div><h3>FlexFlix Kids Sociales</h3><p>Vídeos dinámicos sobre historia, geografía y culturas del mundo para niños.</p><a href="https://www.youtube.com/c/Aula365edu" target="_blank" class="tool-link">Ver Canal →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">5º-6º</span><span class="tool-num">#3</span></div><h3>CuriosaMente Historia</h3><p>Vídeos animados que explican de forma muy didáctica temas históricos, culturales y sociales.</p><a href="https://www.youtube.com/channel/UCX16cLWl6dCjIZMqUBxqGkA" target="_blank" class="tool-link">Ver Canal →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">5º-6º</span><span class="tool-num">#5</span></div><h3>Academia Play Historia</h3><p>El principal canal de divulgación histórica; resume hechos y procesos con dibujo animado.</p><a href="https://www.youtube.com/channel/UCv05qOuJ6lqbe-EyQibJqwQ" target="_blank" class="tool-link">Ver Canal →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">5º-6º</span><span class="tool-num">#8</span></div><h3>Vikidia Historia</h3><p>Enciclopedia escolar adaptada para niños con artículos de historia, geografía y sociedad.</p><a href="https://es.vikidia.org/wiki/Vikidia:Portada" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">5º-6º</span><span class="tool-num">#11</span></div><h3>unProfesor Cívica</h3><p>Videoclases guiadas de historia, geografía y formación cívica con ejercicios prácticos.</p><a href="https://www.unprofesor.com/" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">5º-6º</span><span class="tool-num">#17</span></div><h3>Vikidia Civilizaciones</h3><p>Artículos escritos de forma sencilla sobre antiguas civilizaciones, países y hechos históricos.</p><a href="https://es.vikidia.org/wiki/Vikidia:Portada" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">5º-6º</span><span class="tool-num">#18</span></div><h3>NASA Cultura Científica</h3><p>Noticias y proyectos que muestran cómo científicos de distintos países colaboran juntos.</p><a href="https://www.nasa.gov/es/" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">5º-6º</span><span class="tool-num">#21</span></div><h3>Cristic Sociales 5º y 6º</h3><p>Juegos de cultura general, geografía política e historia para los grados superiores.</p><a href="https://www.cristic.com/50-y-60-de-primaria/" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">5º-6º</span><span class="tool-num">#25</span></div><h3>Math2me Contexto Histórico</h3><p>Vídeos cortos que combinan el razonamiento matemático con anécdotas e historia mundial.</p><a href="https://www.youtube.com/math2mekids" target="_blank" class="tool-link">Ver Canal →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">5º-6º</span><span class="tool-num">#26</span></div><h3>EduCaixa Portal General</h3><p>Catálogo completo de recursos de la Obra Social "la Caixa", incluyendo el Proyecto Mochil.</p><a href="https://www.educaixa.com/" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">5º-6º</span><span class="tool-num">#28</span></div><h3>unProfesor YouTube Sociales</h3><p>Explicaciones en vídeo sobre geografía, historia y civismo narradas por docentes.</p><a href="https://www.youtube.com/unProfesor" target="_blank" class="tool-link">Ver Canal →</a></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="tab-content" data-content="humano">
+      
+      <div class="grade-section default-visible" data-section-grade="1-2">
+        <h2 class="grade-title">🎒 1º y 2º de Primaria</h2>
+        <div class="tools-grid">
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">1º-2º</span><span class="tool-num">#1</span></div><h3>Cosmic Kids Yoga Playlist</h3><p>Grandes aventuras temáticas de yoga, mindfulness y relajación infantil narradas en español.</p><a href="https://www.youtube.com/playlist?list=PL8snGkhBF7njrfPJ9q3bTmbROrc4408" target="_blank" class="tool-link">Ver Playlist →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">1º-2º</span><span class="tool-num">#2</span></div><h3>Cosmic Kids Yoga Canal</h3><p>Canal con cientos de sesiones de yoga infantil, muchas de ellas con doblaje al español.</p><a href="https://www.youtube.com/channel/UC5uIZ2KOZZeQDQoGsi_qbQ" target="_blank" class="tool-link">Ver Canal →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">1º-2º</span><span class="tool-num">#3</span></div><h3>EduCaixa Sentimientos</h3><p>Cuento animado interactivo diseñado para reconocer, validar y comprender las emociones.</p><a href="https://www.educaixa.com/es/-/nusi-y-la-primavera" target="_blank" class="tool-link">Ver Recurso →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">1º-2º</span><span class="tool-num">#4</span></div><h3>EduCaixa Conflictos</h3><p>Cuento animado interactivo enfocado en desarrollar la capacidad de resolución de conflictos.</p><a href="https://www.educaixa.com/-/petol-y-el-senor-roble" target="_blank" class="tool-link">Ver Recurso →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">1º-2º</span><span class="tool-num">#5</span></div><h3>EduCaixa Asertividad</h3><p>Cuento animado interactivo sobre comunicación asertiva, escucha y convivencia escolar.</p><a href="https://www.educaixa.com/-/draki-y-sarim" target="_blank" class="tool-link">Ver Recurso →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">1º-2º</span><span class="tool-num">#6</span></div><h3>EduCaixa Decisiones</h3><p>Cuento animado interactivo centrado en fomentar la autonomía, decisiones y responsabilidad.</p><a href="https://www.educaixa.com/-/laila-y-la-bola-magica" target="_blank" class="tool-link">Ver Recurso →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">1º-2º</span><span class="tool-num">#7</span></div><h3>EduCaixa Motivación</h3><p>Cuento animado interactivo sobre motivación personal, autoestima y trabajo en equipo.</p><a href="https://www.educaixa.com/-/junan-y-la-gruta-magica" target="_blank" class="tool-link">Ver Recurso →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">1º-2º</span><span class="tool-num">#18</span></div><h3>Cosmic Kids App (Higiene)</h3><p>Biblioteca interactiva de yoga doblada. Incluye la sesión 'Tiny el T-Rex' sobre higiene básica.</p><a href="https://app.cosmickids.com/videos-en-espanol" target="_blank" class="tool-link">Visitar App →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">1º-2º</span><span class="tool-num">#19</span></div><h3>Cosmic Kids App (Sueño)</h3><p>Aventuras de relajación guiada y yoga dobladas al español enfocadas en el descanso.</p><a href="https://app.cosmickids.com/videos-en-espanol" target="_blank" class="tool-link">Visitar App →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">1º-2º</span><span class="tool-num">#20</span></div><h3>Cristic Rutinas</h3><p>Cuentos clásicos con actividades dinámicas que refuerzan rutinas diarias y convivencia.</p><a href="https://www.cristic.com/1o-2o-y-3o-infantil/castellano/" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">1º-2º</span><span class="tool-num">#24</span></div><h3>Arcoiris Óculo-Manual</h3><p>Actividades interactivas de copiar dibujos en cuadrícula para motricidad fina.</p><a href="https://www.juegosarcoiris.com/" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">1º-2º</span><span class="tool-num">#25</span></div><h3>Memory de Emociones</h3><p>Juego interactivo creado en Canva para reconocer, emparejar y nombrar sentimientos básicos.</p><a href="https://www.cristic.com/juegos-educativos/juegos-creados-por-cristic/" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">1º-2º</span><span class="tool-num">#30</span></div><h3>Cosmic Kids Yoga Temático</h3><p>Sesiones guiadas de yoga basadas en temáticas populares (como Minecraft o Pokémon) en español.</p><a href="https://app.cosmickids.com/videos-en-espanol" target="_blank" class="tool-link">Visitar App →</a></div>
+        </div>
+      </div>
+
+      <div class="grade-section" data-section-grade="3-4">
+        <h2 class="grade-title">📘 3º y 4º de Primaria</h2>
+        <div class="tools-grid">
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">3º-4º</span><span class="tool-num">#9</span></div><h3>Juegos Arcoiris Atención</h3><p>Juegos de atención concentrada, memoria visual y estimulación de coordinación motora.</p><a href="https://www.juegosarcoiris.com/" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">3º-4º</span><span class="tool-num">#10</span></div><h3>Cokitos Memoria Visual</h3><p>Juegos interactivos breves de memoria y atención sostenida sin necesidad de registro.</p><a href="https://www.cokitos.com/" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">3º-4º</span><span class="tool-num">#11</span></div><h3>Mundo Primaria Lógica</h3><p>Juegos dinámicos centrados en potenciar la memoria, atención y la concentración.</p><a href="https://www.mundoprimaria.com/juegos-educativos" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">3º-4º</span><span class="tool-num">#12</span></div><h3>Cristic Juegos de Reflejos</h3><p>Memorys, divertidos laberintos y juegos de reflejos para todas las edades de primaria.</p><a href="https://www.cristic.com/portfolio_tags/juegos/" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">3º-4º</span><span class="tool-num">#13</span></div><h3>Smile and Learn Emociones</h3><p>Incluye entretenidos vídeos sobre gestión de emociones, yoga y meditación infantil.</p><a href="https://www.smileandlearn.com/" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">3º-4º</span><span class="tool-num">#14</span></div><h3>Smile and Learn (YouTube Em.)</h3><p>Vídeos sobre hábitos saludables, emociones y rutinas positivas para niños.</p><a href="https://www.youtube.com/channel/UCCZpm6436NlU_lCBAIEZmQg" target="_blank" class="tool-link">Ver Canal →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">3º-4º</span><span class="tool-num">#15</span></div><h3>Happy Learning Vida Sana</h3><p>Vídeos animados que explican de forma clara el cuerpo humano, la higiene y hábitos de salud.</p><a href="https://www.youtube.com/c/HappyLearningEs" target="_blank" class="tool-link">Ver Canal →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">3º-4º</span><span class="tool-num">#17</span></div><h3>Poki Coordinación</h3><p>Juegos en navegador interactivos de reflejos, equilibrio y coordinación visomotriz.</p><a href="poki.com/es/educativos" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+        </div>
+      </div>
+
+      <div class="grade-section" data-section-grade="5-6">
+        <h2 class="grade-title">🚀 5º y 6º de Primaria</h2>
+        <div class="tools-grid">
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">5º-6º</span><span class="tool-num">#8</span></div><h3>Proyecto Mochil Completo</h3><p>Colección completa de ocho cuentos animados interactivos para la educación emocional.</p><a href="https://www.educaixa.com/" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">5º-6º</span><span class="tool-num">#16</span></div><h3>FlexFlix Kids Bienestar</h3><p>Vídeos dinámicos sobre salud, autocuidado y bienestar general para alumnos.</p><a href="https://www.youtube.com/c/Aula365edu" target="_blank" class="tool-link">Ver Canal →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">5º-6º</span><span class="tool-num">#21</span></div><h3>Mundo Primaria Cognitivo</h3><p>Juegos de lógica avanzada y concentración que apoyan activamente el bienestar cognitivo.</p><a href="https://www.mundoprimaria.com/" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">5º-6º</span><span class="tool-num">#22</span></div><h3>unProfesor Hábitos</h3><p>Recursos generales que pueden combinarse con el diseño de rutinas de estudio saludables.</p><a href="https://www.unprofesor.com/" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">5º-6º</span><span class="tool-num">#23</span></div><h3>Cokitos Desarrollo</h3><p>Juegos pensados rigurosamente para el desarrollo cognitivo sano sin generar dependencia.</p><a href="https://www.cokitos.com/" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">5º-6º</span><span class="tool-num">#26</span></div><h3>EduCaixa Socioemocional</h3><p>Recursos y dinámicas digitales completas dedicadas 100% a la inteligencia emocional.</p><a href="https://www.educaixa.com/" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">5º-6º</span><span class="tool-num">#27</span></div><h3>NASA Autoestima</h3><p>Actividades didácticas que impulsan la curiosidad innata y la confianza al explorar solos.</p><a href="spaceplace.nasa.gov/sp/" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">5º-6º</span><span class="tool-num">#28</span></div><h3>Vikidia Autonomía</h3><p>Entorno enciclopédico seguro que fomenta la autonomía infantil al investigar por su cuenta.</p><a href="https://es.vikidia.org/wiki/Vikidia:Portada" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+          <div class="tool-card"><div class="badge-container"><span class="tool-grade">5º-6º</span><span class="tool-num">#29</span></div><h3>Poki Diversión Balanceada</h3><p>Plataforma con minijuegos sencillos pensados para el disfrute libre y recreación digital básica.</p><a href="poki.com/es/educativos" target="_blank" class="tool-link">Visitar Sitio →</a></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div style="text-align: center; margin-top: 20px;">
+      <a href="index.html" class="back-button">← Regresar al Inicio</a>
+    </div>
+  </div>
+
+  <footer>
+    🌱 Aventura del Aprendizaje Mágico
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const tabButtons = document.querySelectorAll('.tab-button');
+      const tabContents = document.querySelectorAll('.tab-content');
+      const filterButtons = document.querySelectorAll('.filter-button');
+      
+      // Iniciamos por defecto con el filtro '1-2'
+      let currentGrade = '1-2';
+
+      // Esta función aplica el filtro ocultando o mostrando las secciones de grado en la pestaña activa
+      function applyGradeFilter() {
+        const sections = document.querySelectorAll('.grade-section');
+        sections.forEach(section => {
+          const sectionGrade = section.getAttribute('data-section-grade');
+          if (sectionGrade === currentGrade) {
+            section.style.display = 'block';
+          } else {
+            section.style.display = 'none';
+          }
+        });
+      }
+
+      // Control de pestañas de Campos Formativos
+      tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          const targetArea = button.getAttribute('data-target');
+
+          tabButtons.forEach(btn => btn.classList.remove('active'));
+          tabContents.forEach(content => content.classList.remove('active'));
+
+          button.classList.add('active');
+          document.querySelector(`[data-content="${targetArea}"]`).classList.add('active');
+          
+          // Mantiene el filtro de grado seleccionado al cambiar de pestaña
+          applyGradeFilter();
+        });
+      });
+
+      // Control de botones de Filtro por Grado
+      filterButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          filterButtons.forEach(btn => btn.classList.remove('active'));
+          button.classList.add('active');
+          
+          currentGrade = button.getAttribute('data-grade');
+          applyGradeFilter();
+        });
+      });
+
+      // Ejecución inicial para asegurar que el estado "1-2" se pinte correctamente en el primer render
+      applyGradeFilter();
+    });
+  </script>
+</body>
+</html>
